@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=4:00:00,nodes=1:ppn=1
+#PBS -l walltime=12:00:00,nodes=1:ppn=1
 #PBS -o out-sim-ncovars.file
 #---------------------------------------------
 
