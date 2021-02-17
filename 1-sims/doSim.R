@@ -80,7 +80,7 @@ doSim <- function(nCovarsX=10, corrX=0) {
   ### generate exposure d and outcome y
   
   # binary exposure d
-  logitPart = rowSums(dfX*0.1) + rnorm(n, 0, 1)
+  logitPart = rowSums(dfX*0.1) + z + rnorm(n, 0, 1)
   pD = exp(logitPart)/(1+exp(logitPart))
   d = rep(0, 1, n)
   d[runif(n) <= pD] = 1
