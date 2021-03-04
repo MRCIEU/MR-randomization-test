@@ -4,12 +4,8 @@
 ### simulation to test Branson complete randomization approach
 
 ##
-## we use the same (non standard!) notation as in the Branson paper:
-## instrument Z, exposure D, covariates X and outcome Y
+## Notation: instrument Z, exposure X, covariates C and outcome Y
 
-#### If one x affect z, does it matter how many other x's are considered
-#### e.g. does including more x's reduce the power to detect that the IV is 
-#### not completely randomized
 
 
 # nc: the number of covariates included as candidates
