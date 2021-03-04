@@ -71,24 +71,39 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 
   # binary exposure x
   #### C AND Z ARE DETERMINANTS OF X
-  betaCOnZY = log(5^(1/nc))
+  # we fix the total effect of C_s on X and Y, and C_nots on X and Y, respectively
+  betaCs_onXY = log(2^(1/ncs))
+  betaCnots_onXY = log(2^(1/(nc-ncs)))
 
-  logitPart = z + rowSums(0.1*dfC) + rnorm(n, 0, 1)
+
+  if (ncs!=nc) { 
+    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) 
+  } else {
+    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) 
+  }
+
   pX = exp(logitPart)/(1+exp(logitPart))
   x = rep(0, 1, n)
   x[runif(n) <= pX] = 1
   
   # continuous outcome y
   # C AND X ARE DETERMINANTS OF Y
-  y = rowSums(betaCOnZY*dfC) + 1*x + rnorm(n, 0, 1)
-  
+
+  if (ncs!=nc) {
+    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) + 1*x 
+  } else {
+    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + 1*x 
+  }
+
+
+
   # selection variable s and reduce to selected sample
 
   # beta is set so that the total effect across all covariates affect d is 10
   betaC = log(totalEffectCovarsSelection^(1/ncs))
 
   # X AND (A SUBSET OF) C ARE DETERMINANTS OF SELECTION
-  logitPart = log(2)*x + rowSums(dfC[,1:ncs]*betaC) + 0.1*rnorm(n,0,1)
+  logitPart = log(2)*x + rowSums(dfC[,1:ncs]*betaC) 
   pS = exp(logitPart)/(1+exp(logitPart))
   s = rep(0, 1, n)
   s[runif(n) <= pS] = 1
