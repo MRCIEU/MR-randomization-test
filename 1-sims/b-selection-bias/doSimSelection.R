@@ -123,8 +123,11 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   
   ###
   ### calculate test statistic - Mahalanobis distance
+
+# computationally efficient to generate once rather than for each permutation
+  covDFC = solve(as.matrix(stats::cov(dfC)))
   
-  t = as.numeric(getMD(dfC, z))
+  t = as.numeric(getMD3Cats(dfC, z, covDFC))
 
 
 
@@ -155,13 +158,14 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   # distribution of test statistics generated under the null of complete randomization
   permTestStats = c()
   nPerms = 5000
+
   for (i in 1:nPerms) {
     
     # randomly permute z
     zperm = sample(z, length(z), replace=FALSE)
     
     # calculate test statistic on permuted data
-    testStatPerm = getMD(dfC, zperm)
+    testStatPerm = getMD3Cats(dfC, zperm, covX.inv=covDFC)
     
     # add test stat of permutated data to our empirial distribution of test statistics
     permTestStats = c(permTestStats, testStatPerm)
@@ -190,6 +194,38 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 
 }
 
+getMD3Cats <- function(covars, z, covX.inv) {
 
+	# split into the 3 categories
+	data = data.frame(covars, indicator = z)
+	data1 = subset(data, indicator == 1)
+	data2 = subset(data, indicator == 2)
+	data3 = subset(data, indicator == 3)
+
+	# remove indicator column
+	data1 = subset(data1, select = -c(indicator))
+	data2 = subset(data2, select = -c(indicator))
+	data3 = subset(data3, select = -c(indicator))
+
+	# numbers with each allele dosage
+	n1 = nrow(data1)
+	n2 = nrow(data2)
+	n3 = nrow(data3)
+
+	# mean difference across three ordinal categories
+	covMeanDiffs1vs2 = colMeans(data1) - colMeans(data2)
+	covMeanDiffs2vs3 = colMeans(data2) - colMeans(data3)
+	
+	# weight each diff by number of comparisons 
+	# 1vs2 has n1*n2 comparisons between each persons with allele dose 1 and 2
+	# 1vs2 has n2*n3 comparisons between each persons with allele dose 2 and 3
+	# (both these have *n2 so this is ignored)
+	covMeanDiffs = (n1*covMeanDiffs1vs2 + n3*covMeanDiffs2vs3)/(n1+n3)
+	
+	md = t(covMeanDiffs) %*% covX.inv %*% covMeanDiffs
+
+	return(md)
+
+}
 
 
