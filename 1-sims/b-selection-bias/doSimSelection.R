@@ -15,7 +15,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc=100, ncs=100, corrC=0) {
+doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=10) {
 
   ###
   ### load packages
@@ -89,7 +89,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0) {
   # selection variable s and reduce to selected sample
 
   # beta is set so that the total effect across all covariates affect d is 10
-  betaC = log(10^(1/ncs))
+  betaC = log(totalEffectCovarsSelection^(1/ncs))
 
   # X AND (A SUBSET OF) C ARE DETERMINANTS OF SELECTION
   logitPart = log(2)*x + rowSums(dfC[,1:ncs]*betaC) + 0.1*rnorm(n,0,1)
