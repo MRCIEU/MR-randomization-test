@@ -97,9 +97,9 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   # C AND X ARE DETERMINANTS OF Y
 
   if (ncs!=nc) {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) + 1*x 
+    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) + 1*x + rnormal(0,1)
   } else {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + 1*x 
+    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + 1*x + rnormal(0,1)
   }
 
 
