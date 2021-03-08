@@ -67,14 +67,18 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 #  print("P values of ordered logistic regression parameters:")
 #  print(regPvalue)
   
-  ### generate exposure d, outcome y and selection variable s
 
-  # binary exposure x
-  #### C AND Z ARE DETERMINANTS OF X
-  # we fix the total effect of C_s on X and Y, and C_nots on X and Y, respectively
+
+  ##
+  ## calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
+
   betaCs_onXY = log(2^(1/ncs))
   betaCnots_onXY = log(2^(1/(nc-ncs)))
 
+
+
+  ###
+  ### generate exposure x
 
   if (ncs!=nc) { 
     logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) 
@@ -86,7 +90,10 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   x = rep(0, 1, n)
   x[runif(n) <= pX] = 1
   
-  # continuous outcome y
+
+
+  ###
+  ### generate continuous outcome y
   # C AND X ARE DETERMINANTS OF Y
 
   if (ncs!=nc) {
@@ -97,9 +104,10 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 
 
 
-  # selection variable s and reduce to selected sample
+  ###
+  ### generate selection variable s
 
-  # beta is set so that the total effect across all covariates affect d is 10
+  # beta is set so that the total effect across all covariates affect d is constant
   betaC = log(totalEffectCovarsSelection^(1/ncs))
 
   # X AND (A SUBSET OF) C ARE DETERMINANTS OF SELECTION
