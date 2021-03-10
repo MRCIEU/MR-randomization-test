@@ -67,9 +67,9 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 
   # if there are covariates not affecting selection generate
   if (ncs!=nc) { 
-    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) 
+    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc, drop=FALSE]) 
   } else {
-    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) 
+    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) 
   }
 
   pX = exp(logitPart)/(1+exp(logitPart))
@@ -77,15 +77,14 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   x[runif(n) <= pX] = 1
   
 
-
   ###
   ### generate continuous outcome y
   # C AND X ARE DETERMINANTS OF Y
 
   if (ncs!=nc) {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) + 1*x + rnormal(0,1)
+    y = rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc, drop=FALSE]) + 1*x + rnorm(n,0,1)
   } else {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs]) + 1*x + rnormal(0,1)
+    y = rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + 1*x + rnorm(n,0,1)
   }
 
 
@@ -97,7 +96,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   betaC = log(totalEffectCovarsSelection^(1/ncs))
 
   # X AND (A SUBSET OF) C ARE DETERMINANTS OF SELECTION
-  logitPart = log(2)*x + rowSums(dfC[,1:ncs]*betaC) 
+  logitPart = log(2)*x + rowSums(dfC[,1:ncs, drop=FALSE]*betaC) 
   pS = exp(logitPart)/(1+exp(logitPart))
   s = rep(0, 1, n)
   s[runif(n) <= pS] = 1
