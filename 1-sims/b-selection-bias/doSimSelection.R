@@ -197,33 +197,17 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
 
 getMD3Cats <- function(covars, z, covX.inv) {
 
-	# split into the 3 categories
-	data = data.frame(covars, indicator = z)
-	data1 = subset(data, indicator == 1)
-	data2 = subset(data, indicator == 2)
-	data3 = subset(data, indicator == 3)
+	# mean difference across three ordinal categories - treat as continuous
+	meanDiffs = rep(NA,ncol(covars))
+	for (i in 1: ncol(covars)) {
+		covar = covars[,i]
+		fit = lm(z ~ covar)
+		sumx = summary(fit)
+		beta = sumx$coefficients["covar","Estimate"]
+		meanDiffs[i] = beta
+	}
 
-	# remove indicator column
-	data1 = subset(data1, select = -c(indicator))
-	data2 = subset(data2, select = -c(indicator))
-	data3 = subset(data3, select = -c(indicator))
-
-	# numbers with each allele dosage
-	n1 = nrow(data1)
-	n2 = nrow(data2)
-	n3 = nrow(data3)
-
-	# mean difference across three ordinal categories
-	covMeanDiffs1vs2 = colMeans(data1) - colMeans(data2)
-	covMeanDiffs2vs3 = colMeans(data2) - colMeans(data3)
-	
-	# weight each diff by number of comparisons 
-	# 1vs2 has n1*n2 comparisons between each persons with allele dose 1 and 2
-	# 1vs2 has n2*n3 comparisons between each persons with allele dose 2 and 3
-	# (both these have *n2 so this is ignored)
-	covMeanDiffs = (n1*covMeanDiffs1vs2 + n3*covMeanDiffs2vs3)/(n1+n3)
-	
-	md = t(covMeanDiffs) %*% covX.inv %*% covMeanDiffs
+	md = t(meanDiffs) %*% covX.inv %*% meanDiffs
 
 	return(md)
 
