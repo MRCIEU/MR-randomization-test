@@ -13,7 +13,7 @@ params <- expand.grid(
 ##
 ## add nc_nots settings, that are relative to ncs number
 
-# {0, ncs/2, ncs, 2*ncs}
+# {1, ncs/2, ncs, 2*ncs, 4*ncs}
 numParams = nrow(params)
 
 # replicate so 4 versions of params for each nc_nots value
