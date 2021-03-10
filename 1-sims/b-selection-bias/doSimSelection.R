@@ -45,41 +45,27 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   ###
   ### generate data
   
-  ## generate covariates C with particular correlation corrC
-  
-  
+  ## generate covariates C with particular correlation corrC  
   corrCMat = diag(nc)
   corrCMat[which(corrCMat == 0)] = corrC
   dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=corrCMat, empirical=FALSE)
-  
   dfC = as.data.frame(dfC)
   
   ## generate a IV with 3 categories
-  
-  # assignment mechanism of z: random assignment with effects from m covariates
   z = sample(1:3, n, replace=TRUE, prob=c(0.6, 0.3, 0.1))
   
-  
-  # check assoc of z with covariates
-#  fit <- polr(as.factor(z) ~ ., data=dfX, Hess=TRUE)
-#  ct = coeftest(fit)
-#  regPvalue = ct[,"Pr(>|t|)"]
-#  print("P values of ordered logistic regression parameters:")
-#  print(regPvalue)
-  
 
-
-  ##
-  ## calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
+  ###
+  ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
 
   betaCs_onXY = log(2^(1/ncs))
   betaCnots_onXY = log(2^(1/(nc-ncs)))
 
 
-
   ###
   ### generate exposure x
 
+  # if there are covariates not affecting selection generate
   if (ncs!=nc) { 
     logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc]) 
   } else {
@@ -117,10 +103,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   s[runif(n) <= pS] = 1
 
   # check variance of selection explained by Xs
-  mylogit <- glm(s ~ ., data=dfC[,1:ncs], family="binomial")
-  #sumx = summary(mylogit)
-  #print(summary(lm(s ~ ., data=dfX[,1:nXAffectZ])))
-  #print(summary(glm(s ~ d, family="binomial")))
+  #mylogit <- glm(s ~ ., data=dfC[,1:ncs], family="binomial")
 
   # check selection variable has same prop'n variance explained by C and same distribution
 #  library('rsq')
@@ -143,7 +126,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   ###
   ### calculate test statistic - Mahalanobis distance
 
-# computationally efficient to generate once rather than for each permutation
+  # computationally efficient to generate once rather than for each permutation
   covDFC = solve(as.matrix(stats::cov(dfC)))
   
   t = as.numeric(getMD3Cats(dfC, z, covDFC))
