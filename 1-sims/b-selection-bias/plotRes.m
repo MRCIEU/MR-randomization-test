@@ -6,7 +6,7 @@ resDir=getenv('RES_DIR');
 colorx = {'[0.8 0.2 0.2]';'blue'};
 facecolorx = {'white';'white'};
 markerEdgecolorx = {'[0.8 0.2 0.2]';'[0.4 0.0 0.0]';'[0.4 0.0 0.2]'; '[1.0 0.5 0.5]'; '[0.1 0.1 0.6]'; '[0.5 0.8 0.0]'; 'magenta';'cyan'};
-markersx = {'s';'^';'o'};
+markersx = {'s';'^';'o';'v';'d'};
 markersizex = 11;
 
 
@@ -25,8 +25,8 @@ h=figure('DefaultAxesFontSize',14);
 ncs = 10;
 
 % sim params
-all_ncNOTs=[0,5,10,20];
-all_corr=[0,0.4,0.8];
+all_ncNOTs=[1,5,10,20,40];
+all_corr=[0,0.1,0.2,0.4,0.8];
 
 
 % plot results for each ncnots and corr combination
@@ -61,17 +61,17 @@ for i=1:length(all_ncNOTs)
 end
 
 % set xaxis values
-labelx = {'0';'5';'10';'20'};
+labelx = {'1';'5';'10';'20';'40'};
 set(gca,'XTickLabel', labelx);
-set(gca,'XTick', [1.2;2.2;3.2;4.2]);
+set(gca,'XTick', [1.1;2.1;3.1;4.1;5.1]);
 
 % set legend box
-lx=legend([hxBran,hxBon], {'Branson corr=0';'Branson corr=0.4';'Branson corr=0.8';'Bonf corr=0';'Bonf corr=0.4';'Bonf corr=0.8'});
+lx=legend([hxBran,hxBon], {'Branson corr=0';'Branson corr=0.1';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Bonf corr=0';'Bonf corr=0.1';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8'});
 lx.FontSize = 12;
 
 % set axis labels
 xlabel('Number of covariates not affecting selection', 'FontSize', 14);
-ylabel('Statistical power (Monte Carlo standard error)');
+ylabel('Statistical power (Monte Carlo SE)');
 
 % save to file
 saveas(h, strcat(resDir, '/sims/fig-sim-selection-10.pdf'));
