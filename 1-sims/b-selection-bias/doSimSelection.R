@@ -58,20 +58,14 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   ###
   ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
 
-  betaCs_onXY = log(2^(1/ncs))
-  betaCnots_onXY = log(2^(1/(nc-ncs)))
+  betaCs_onX = log(2^(1/ncs))
+  betaCnots_onX = log(2^(1/(nc-ncs)))
 
 
   ###
   ### generate exposure x
 
-  # if there are covariates not affecting selection generate
-  if (ncs!=nc) { 
-    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc, drop=FALSE]) 
-  } else {
-    logitPart = z + rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) 
-  }
-
+  logitPart = z + rowSums(betaCs_onX*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onX*dfC[,(ncs+1):nc, drop=FALSE]) 
   pX = exp(logitPart)/(1+exp(logitPart))
   x = rep(0, 1, n)
   x[runif(n) <= pX] = 1
@@ -81,11 +75,10 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   ### generate continuous outcome y
   # C AND X ARE DETERMINANTS OF Y
 
-  if (ncs!=nc) {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onXY*dfC[,(ncs+1):nc, drop=FALSE]) + 1*x + rnorm(n,0,1)
-  } else {
-    y = rowSums(betaCs_onXY*dfC[,1:ncs, drop=FALSE]) + 1*x + rnorm(n,0,1)
-  }
+  betaCs_onY = 2/ncs
+  betaCnots_onY = 2/(nc-ncs)
+
+  y = rowSums(betaCs_onY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onY*dfC[,(ncs+1):nc, drop=FALSE]) + 1*x + rnorm(n,0,1)
 
 
 
