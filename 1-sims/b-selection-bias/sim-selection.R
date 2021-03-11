@@ -5,13 +5,9 @@
 
 ## instrument Z, exposure X, covariates C and outcome Y
 
-
-#source('doSimSelection.R')
-
 set.seed(123456)
 
 resDir=Sys.getenv('RES_DIR')
-
 
 
 args = commandArgs(trailingOnly=TRUE)
