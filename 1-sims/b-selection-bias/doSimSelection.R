@@ -52,7 +52,9 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   dfC = as.data.frame(dfC)
   
   ## generate a IV with 3 categories
-  z = sample(1:3, n, replace=TRUE, prob=c(0.6, 0.3, 0.1))
+  ## use p(A1)=0.8, p(A2)=0.2, dosage probs assuming HWE = (0.8^2, 2*0.8*0.2, 0.2^2) = (0.64,0.32,0.04) 
+  ## TODO update this to use these freqs ***************************
+  z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
   
 
   ###
