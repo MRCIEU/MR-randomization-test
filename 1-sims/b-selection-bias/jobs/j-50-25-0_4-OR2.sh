@@ -7,6 +7,7 @@ date
 
 
 cd $PBS_O_WORKDIR
+cd ..
 
 module add languages/R-4.0.3-gcc9.1.0
 
