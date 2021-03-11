@@ -8,8 +8,8 @@ resDir=Sys.getenv('RES_DIR')
 library('ivmodel')
 library('MASS')
 
-source('doSimSelection.R')
-
+source('../doSimSelection.R')
+source('getMDTest.R')
 
 n=10000
 nc=10
@@ -24,10 +24,10 @@ for (corrC in seq(0,0.9, by=0.1)) {
   corrCMat[which(corrCMat == 0)] = corrC
   dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=corrCMat, empirical=FALSE)
   dfC = as.data.frame(dfC)
-  covDFC = solve(as.matrix(stats::cov(dfC)))
+  covinvDFC = solve(as.matrix(stats::cov(dfC)))
 
   outfile = paste0(resDir, '/sims/mdtest', corrC, '.csv')
-  cat('mymd, md\n', file=outfile, append=FALSE)
+  cat('mymd,mymd2,md\n', file=outfile, append=FALSE)
 
   for (i in 1:200) {
 
@@ -35,12 +35,15 @@ for (corrC in seq(0,0.9, by=0.1)) {
     zperm = sample(z, length(z), replace=FALSE)
 
     # get md using our approach and function in ivmodel package (Branson approach)
-    myMD = getMD3Cats(dfC, zperm, covDFC)
-    md = getMD(dfC, zperm, covDFC)
+    myMD = getMD3Cats(dfC, zperm, covinvDFC)
+    md = getMD(dfC, zperm, covinvDFC)
+    myMD2 = getMDTest(dfC, zperm, covinvDFC)
 
     # save mds to file
-    cat(paste0(myMD,',',md, '\n'), file=outfile, append=TRUE)
+    cat(paste0(myMD, ',', myMD2, ',', md, '\n'), file=outfile, append=TRUE)
 
   }
 
 }
+
+
