@@ -6,7 +6,7 @@
 params <- expand.grid(
 
 	corrs=c(0,0.1,0.2,0.4,0.8),
-	or=c(2),
+	or=c(1.4, 2),
 	ncs=c(10,50)
 )
 

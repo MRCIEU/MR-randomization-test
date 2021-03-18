@@ -21,12 +21,18 @@ allx.mcseBranson = str2double(allx.mcseBranson);
 allx.powerBon = str2double(allx.powerBon);
 allx.mcseBon = str2double(allx.mcseBon);
 
-h=figure('DefaultAxesFontSize',14);
-ncs = 10;
 
 % sim params
 all_ncNOTs=[1,5,10,20,40];
 all_corr=[0,0.1,0.2,0.4,0.8];
+ors=[1.4, 2];
+ncs=10;
+
+for k=1:length(ors)
+
+thisor = ors(k);
+
+h=figure('DefaultAxesFontSize',14);
 
 
 % plot results for each ncnots and corr combination
@@ -38,7 +44,7 @@ for i=1:length(all_ncNOTs)
 
 		posx=i+(j-1)*0.1;
 
-		ix = find(allx.ncs==ncs & allx.ncNOTs == ncNOTs & allx.corrs ==corr);
+		ix = find(allx.ncs==ncs & allx.ncNOTs == ncNOTs & allx.corrs ==corr & allx.or == thisor);
 
 		% branson
 		lower=allx.powerBranson(ix) - allx.mcseBranson(ix);
@@ -74,4 +80,7 @@ xlabel('Number of covariates not affecting selection', 'FontSize', 14);
 ylabel('Statistical power (Monte Carlo SE)');
 
 % save to file
-saveas(h, strcat(resDir, '/sims/fig-sim-selection-10.pdf'));
+saveas(h, strcat(resDir, '/sims/fig-sim-selection-10-OR',num2str(thisor),'.pdf'));
+
+
+end
