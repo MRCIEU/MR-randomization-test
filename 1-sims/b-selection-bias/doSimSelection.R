@@ -123,7 +123,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
   # computationally efficient to generate once rather than for each permutation
   covDFC = solve(as.matrix(stats::cov(dfC)))
   
-  t = as.numeric(getMD3Cats(dfC, z, covDFC))
+  t = as.numeric(getMD3CatsCorr(dfC, z, covDFC))
 
 
 
