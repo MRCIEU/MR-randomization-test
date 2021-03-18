@@ -161,7 +161,7 @@ doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=
     zperm = sample(z, length(z), replace=FALSE)
     
     # calculate test statistic on permuted data
-    testStatPerm = getMD3Cats(dfC, zperm, covX.inv=covDFC)
+    testStatPerm = getMD3CatsCorr(dfC, zperm, covX.inv=covDFC)
     
     # add test stat of permutated data to our empirial distribution of test statistics
     permTestStats = c(permTestStats, testStatPerm)
@@ -208,4 +208,20 @@ getMD3Cats <- function(covars, z, covX.inv) {
 
 }
 
+
+getMD3CatsCorr <- function(covars, z, covX.inv) {
+
+	# mean difference across three ordinal categories - treat as continuous
+	meanDiffs = rep(NA,ncol(covars))
+	for (i in 1: ncol(covars)) {
+		covar = covars[,i]
+
+		meanDiffs[i] = cor(z, covar)*(sd(covar)/sd(z))
+	}
+
+	md = t(meanDiffs) %*% covX.inv %*% meanDiffs
+
+	return(md)
+
+}
 

@@ -28,7 +28,6 @@ for i=0:0.1:0.9
   saveas(h, strcat(resDir, '/sims/plottest2',num2str(i),'.pdf'));
 
 
-
   h=figure('DefaultAxesFontSize',14);
   plot(allx.mymd2, allx.mymd, '.')
 
@@ -39,6 +38,27 @@ for i=0:0.1:0.9
   % save to file
   saveas(h, strcat(resDir, '/sims/plottest3',num2str(i),'.pdf'));
 
+
+  h=figure('DefaultAxesFontSize',14);
+  plot(allx.mymd, allx.mymdcor, '.')
+
+  % set axis labels
+  ylabel('mymdcor');
+  xlabel('mymd');
+
+  % save to file
+  saveas(h, strcat(resDir, '/sims/plottest4',num2str(i),'.pdf'));
+
+
+  h=figure('DefaultAxesFontSize',14);
+  plot(allx.md, allx.mymdcor, '.')
+
+  % set axis labels
+  ylabel('mymdcor');
+  xlabel('md');
+
+  % save to file
+  saveas(h, strcat(resDir, '/sims/plottest5',num2str(i),'.pdf'));
 
 
 end
