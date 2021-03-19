@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=30:00:00,nodes=1:ppn=10
+#PBS -l walltime=60:00:00,nodes=1:ppn=10
 #PBS -o out-sim-sel-10-1-0_8-OR2.file
 #---------------------------------------------
 

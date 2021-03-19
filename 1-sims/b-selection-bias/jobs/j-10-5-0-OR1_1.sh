@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=360:00:00,nodes=1:ppn=10
-#PBS -o out-sim-sel-50-25-0-OR2.file
+#PBS -l walltime=30:00:00,nodes=1:ppn=10
+#PBS -o out-sim-sel-10-5-0-OR1_1.file
 #---------------------------------------------
 
 date
@@ -14,7 +14,7 @@ module add languages/R-4.0.3-gcc9.1.0
 
 export RES_DIR="${HOME}/2021-randomization-test/results"
 
-Rscript sim-selection.R 50 25 0 2 
+Rscript sim-selection.R 10 5 0 1.1 
 
 date
 
