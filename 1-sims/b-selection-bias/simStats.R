@@ -31,7 +31,7 @@ simStats <- function(params) {
   else {
     # no results files yet for this param combination
     print("NO RESULTS FOR THIS PARAM COMBINATION")
-    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA))
+    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA))
   }
 
   for (seed in 2:10) {
@@ -66,6 +66,36 @@ simStats <- function(params) {
   mcseBon = (powerBon*(1-powerBon)/numRes)^0.5
 
 
-  return(list(numRes=numRes, powerBranson=powerBranson, mcseBranson=mcseBranson, powerBon=powerBon, mcseBon=mcseBon))
+  ###
+  ### calculate power and MCSE for number of independent tests correction
+
+  # find whether each iteration passed the indep test threshold
+  numCovars = ncs+ncNOTs
+  numIndepTests = 1+(numCovars-1)*(1-corrC)
+  pThresh = 0.05/numIndepTests
+  pCols = paste0('p', 1:numCovars)
+
+  simRes$indepRes = apply(simRes, 1, indepCheck, pCols=pCols, pThresh=pThresh)
+
+  # calculated power/mcse
+  numIndepReject = length(which(simRes$indepRes == 1))
+  powerIndep = numIndepReject/numRes
+
+  mcseIndep = (powerIndep*(1-powerIndep)/numRes)^0.5
+
+
+
+
+  return(list(numRes=numRes, powerBranson=powerBranson, mcseBranson=mcseBranson, powerBon=powerBon, mcseBon=mcseBon, powerInd=powerIndep, mcseInd=mcseIndep))
+
+}
+
+indepCheck <- function(rowVec, pCols, pThresh) {
+
+  # for a particular sim iteraction, count the number of tests is a pvalue less than pThresh
+  numBelow = length(which(rowVec[pCols]<pThresh))
+
+  # return a boolean - whether at least 1 of the p values is below pThresh
+  return(numBelow>0)
 
 }

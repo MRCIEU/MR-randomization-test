@@ -3,8 +3,8 @@ resDir=getenv('RES_DIR');
 
 
 % basic graph options
-colorx = {'[0.8 0.2 0.2]';'blue'};
-facecolorx = {'white';'white'};
+colorx = {'[0.8 0.2 0.2]';'blue';'green'};
+facecolorx = {'white';'white';'white'};
 markerEdgecolorx = {'[0.8 0.2 0.2]';'[0.4 0.0 0.0]';'[0.4 0.0 0.2]'; '[1.0 0.5 0.5]'; '[0.1 0.1 0.6]'; '[0.5 0.8 0.0]'; 'magenta';'cyan'};
 markersx = {'s';'^';'o';'v';'d'};
 markersizex = 11;
@@ -20,6 +20,8 @@ allx.powerBranson = str2double(allx.powerBranson);
 allx.mcseBranson = str2double(allx.mcseBranson);
 allx.powerBon = str2double(allx.powerBon);
 allx.mcseBon = str2double(allx.mcseBon);
+allx.powerInd = str2double(allx.powerInd);
+allx.mcseInd = str2double(allx.mcseInd);
 
 
 % sim params
@@ -62,6 +64,15 @@ for i=1:length(all_ncNOTs)
                 hold on; h1=plot(posx, allx.powerBon(ix), markersx{j}, 'MarkerFaceColor', facecolorx{2}, 'MarkerEdgeColor', colorx{2}, 'MarkerSize', markersizex);
 
 		hxBon(j) = h1;
+
+		% number of independent tests based on correlation
+		posx = posx+0.04;
+		lower=allx.powerInd(ix) - allx.mcseInd(ix);
+		upper=allx.powerInd(ix) + allx.mcseInd(ix);
+		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{3}, 'linewidth', 3);
+		hold on; h1=plot(posx, allx.powerInd(ix), markersx{j}, 'MarkerFaceColor', facecolorx{3}, 'MarkerEdgeColor', colorx{3}, 'MarkerSize', markersizex);
+
+		hxInd(j) = h1;
 
 	end
 end

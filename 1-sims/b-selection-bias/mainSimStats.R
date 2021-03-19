@@ -37,7 +37,7 @@ resDir=Sys.getenv('RES_DIR')
 resFile = paste0(resDir, '/sims/sim-res.csv')
 
 # write output file header line
-cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon"), file=resFile, sep="\n", append=FALSE)
+cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon, powerInd, mcseInd"), file=resFile, sep="\n", append=FALSE)
 
 # generate summary stat for each param combination and save results to file
 for (i in 1:nrow(params)) {
