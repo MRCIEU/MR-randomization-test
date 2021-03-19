@@ -6,7 +6,7 @@
 params <- expand.grid(
 
 	corrs=c(0,0.1,0.2,0.4,0.8),
-	or=c(1.4, 2),
+	or=c(1.1, 1.4, 2),
 	ncs=c(10,50)
 )
 
@@ -26,6 +26,11 @@ params$ncNOTs[(2*numParams+1):(3*numParams)] = params$ncs[(2*numParams+1):(3*num
 params$ncNOTs[(3*numParams+1):(4*numParams)] = 2*params$ncs[(3*numParams+1):(4*numParams)]
 params$ncNOTs[(4*numParams+1):(5*numParams)] = 4*params$ncs[(4*numParams+1):(5*numParams)]
 
+
+# add params where ncs=1
+# 1, 2, 5, 10
+params1 = expand.grid(corrs=c(0,0.1,0.2,0.4,0.8),or=c(1.1, 1.4, 2), ncs=c(1), ncNOTs=c(1,2,5,10))
+params = rbind(params, params1)
 
 
 ##

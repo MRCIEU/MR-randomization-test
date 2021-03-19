@@ -27,8 +27,21 @@ allx.mcseInd = str2double(allx.mcseInd);
 % sim params
 all_ncNOTs=[1,5,10,20,40];
 all_corr=[0,0.1,0.2,0.4,0.8];
-ors=[1.4, 2];
-ncs=10;
+ors=[1.1, 1.4, 2];
+ncs=[1,10,50];
+
+
+for m=1:length(ncs)
+
+thisncs = ncs(m);
+
+if (thisncs==1)
+  all_ncNOTs=[1,2,5,10];
+elseif(thisncs == 10)
+  all_ncNOTs=[1,5,10,20,40];
+elseif(thisncs == 50)
+  all_ncNOTs=[1,25,50,100];
+end
 
 for k=1:length(ors)
 
@@ -46,11 +59,11 @@ for i=1:length(all_ncNOTs)
 
 		posx=i+(j-1)*0.1;
 
-		ix = find(allx.ncs==ncs & allx.ncNOTs == ncNOTs & allx.corrs ==corr & allx.or == thisor);
+		ix = find(allx.ncs==thisncs & allx.ncNOTs == ncNOTs & allx.corrs ==corr & allx.or == thisor);
 
 		% branson
-		lower=allx.powerBranson(ix) - allx.mcseBranson(ix);
-		upper=allx.powerBranson(ix) + allx.mcseBranson(ix);
+		lower=allx.powerBranson(ix) - 1.96*allx.mcseBranson(ix);
+		upper=allx.powerBranson(ix) + 1.96*allx.mcseBranson(ix);
 		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{1}, 'linewidth', 3);
 		hold on; h1=plot(posx, allx.powerBranson(ix), markersx{j}, 'MarkerFaceColor', facecolorx{1}, 'MarkerEdgeColor', colorx{1}, 'MarkerSize', markersizex);
 
@@ -58,17 +71,17 @@ for i=1:length(all_ncNOTs)
 
 		% bonferroni
 		posx = posx+0.02;
-		lower=allx.powerBon(ix) - allx.mcseBon(ix);
-                upper=allx.powerBon(ix) + allx.mcseBon(ix);
+		lower=allx.powerBon(ix) - 1.96*allx.mcseBon(ix);
+                upper=allx.powerBon(ix) + 1.96*allx.mcseBon(ix);
 		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{2}, 'linewidth', 3);
                 hold on; h1=plot(posx, allx.powerBon(ix), markersx{j}, 'MarkerFaceColor', facecolorx{2}, 'MarkerEdgeColor', colorx{2}, 'MarkerSize', markersizex);
 
 		hxBon(j) = h1;
 
 		% number of independent tests based on correlation
-		posx = posx+0.04;
-		lower=allx.powerInd(ix) - allx.mcseInd(ix);
-		upper=allx.powerInd(ix) + allx.mcseInd(ix);
+		posx = posx+0.02;
+		lower=allx.powerInd(ix) - 1.96*allx.mcseInd(ix);
+		upper=allx.powerInd(ix) + 1.96*allx.mcseInd(ix);
 		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{3}, 'linewidth', 3);
 		hold on; h1=plot(posx, allx.powerInd(ix), markersx{j}, 'MarkerFaceColor', facecolorx{3}, 'MarkerEdgeColor', colorx{3}, 'MarkerSize', markersizex);
 
@@ -78,7 +91,7 @@ for i=1:length(all_ncNOTs)
 end
 
 % set xaxis values
-labelx = {'1';'5';'10';'20';'40'};
+labelx = all_ncNOTs;
 set(gca,'XTickLabel', labelx);
 set(gca,'XTick', [1.1;2.1;3.1;4.1;5.1]);
 
@@ -91,7 +104,9 @@ xlabel('Number of covariates not affecting selection', 'FontSize', 14);
 ylabel('Statistical power (Monte Carlo SE)');
 
 % save to file
-saveas(h, strcat(resDir, '/sims/fig-sim-selection-10-OR',num2str(thisor),'.pdf'));
+saveas(h, strcat(resDir, '/sims/fig-sim-selection-',num2str(thisncs),'-OR',num2str(thisor),'.pdf'));
 
+
+end
 
 end
