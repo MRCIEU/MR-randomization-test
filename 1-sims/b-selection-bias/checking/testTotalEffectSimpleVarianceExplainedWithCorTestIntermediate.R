@@ -32,17 +32,13 @@ for (ncs in 1:9) {
   print('################')  
   print(paste0('number of covars affecting selection:', ncs))
       
-  # the total effect of the two sets of covariates (those that affect selection and those that do not) are held fixed
-  betaCs_onTmp = sqrt(0.8/(ncs*(1+2*corrC)))
-  betaCnots_onTmp = sqrt(0.8/((nc-ncs)*(1+2*corrC)))
-
 
   ##
   ## generate intermediate outcomes
 
   # combine the variables in CS and CNOTS INTO COMBINED VARIABLES, RESPECTIVELY.
-  yTmp1 = rowSums(betaCs_onTmp*dfC[,1:ncs, drop=FALSE]) 
-  yTmp2 = rowSums(betaCnots_onTmp*dfC[,(ncs+1):nc, drop=FALSE]) 
+  yTmp1 = rowSums(dfC[,1:ncs, drop=FALSE]) 
+  yTmp2 = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
   # standardise so we can use corr in place of covariance below
   yTmp1 = as.vector(scale(yTmp1))
