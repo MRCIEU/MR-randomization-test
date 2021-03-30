@@ -3,7 +3,8 @@
 ###
 ### This version splits the beta coefficients between the covariates and generates intermediate variables, that are then used to generate y
 
-# use MASS for mvrnorm
+source('generateY.R')
+
 library('MASS')
 
 # number in sample
@@ -14,13 +15,14 @@ nc = 20
 
 
 #for (corrC in c(0.1,0.3,0.6,0.9)) {
-for (corrC in c(0.1)) {
+for (corrC in c(0, 0.1)) {
 
 print('#############################')
 print(paste0('Correlation: ', corrC))
 
-# generate covariates
-#corrC = 0.3
+##
+## generate covariates
+
 corrCMat = diag(nc)
 corrCMat[which(corrCMat == 0)] = corrC
 dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=corrCMat, empirical=FALSE)
@@ -32,39 +34,7 @@ for (ncs in 1:9) {
   print('################')  
   print(paste0('number of covars affecting selection:', ncs))
       
-
-  ##
-  ## generate intermediate outcomes
-
-  # combine the variables in CS and CNOTS INTO COMBINED VARIABLES, RESPECTIVELY.
-  yTmp1 = rowSums(dfC[,1:ncs, drop=FALSE]) 
-  yTmp2 = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
-
-  # standardise so we can use corr in place of covariance below
-  yTmp1 = as.vector(scale(yTmp1))
-  yTmp2 = as.vector(scale(yTmp2))
-
-  ##
-  ## continuous outcome y
-
-  # find correlation between the two intermediate variables and use that to decide on the right
-  # beta such that the total effect of CS and CNOTS combined is constant
-  corrTmps = cor(yTmp1, yTmp2)
-  numTraits=2
-  betaY = sqrt(0.8/(numTraits*(1+2*corrTmps)))
-  y = betaY*yTmp1 + betaY*yTmp2 + rnorm(n,0,1)
-
-
-  print("COMBINED MODEL WITH ALL COVARS")
-  sumxAll = summary(lm(y ~ ., data = dfC))
-
- # print(sumxAll)
-
-  print("MODEL WITH THE TWO INTERMEDIATE VARIABLES")
-  sumxAll = summary(lm(y ~ yTmp1 + yTmp2))
-  print(sumxAll$r.squared)
-
-
+  y = generateY(dfC, null, ncs)
   
 }
 
