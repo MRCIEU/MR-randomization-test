@@ -34,7 +34,7 @@ for (ncs in 1:9) {
   print('################')  
   print(paste0('number of covars affecting selection:', ncs))
       
-  y = generateY(dfC, null, ncs)
+  y = generateY(dfC, NULL, ncs)
   
 }
 
