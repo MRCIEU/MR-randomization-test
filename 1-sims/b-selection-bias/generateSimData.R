@@ -44,7 +44,6 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   corrCMat[which(corrCMat == 0)] = corrC
   covC = cor2cov(corrCMat, 1)
   dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=covC, empirical=FALSE)
-  #dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=corrCMat, empirical=FALSE)
   dfC = as.data.frame(dfC)
   
   ## generate a IV with 3 categories
