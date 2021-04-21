@@ -72,12 +72,8 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ### generate continuous outcome y
 
   # C AND X ARE DETERMINANTS OF Y
-
-  betaCs_onY = 2/ncs
-  betaCnots_onY = 2/(nc-ncs)
-
-  y = rowSums(betaCs_onY*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onY*dfC[,(ncs+1):nc, drop=FALSE]) + 1*x + rnorm(n,0,1)
-
+  dataY = generateContinuousY(dfC, x, ncs)
+  y = dataY$y
 
 
   ###

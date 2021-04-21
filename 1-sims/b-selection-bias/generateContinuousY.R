@@ -7,10 +7,8 @@
 library('MASS')
 
 
-generateY <- function(dfC, x, ncs) {
+generateContinuousY <- function(dfC, x, ncs) {
 
-  print(x)
-  print(ncs)
 
   # number of covariates
   nc = ncol(dfC)
@@ -24,32 +22,24 @@ generateY <- function(dfC, x, ncs) {
   yTmp2 = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
 
-  var1 = var(yTmp1)
-  var2 = var(yTmp2)
-  intermedCov = cov(yTmp1, yTmp2)
-
   ##
   ## continuous outcome y
 
   # find correlation between the two intermediate variables and use that to decide on the right
   # beta such that the total effect of CS and CNOTS combined is constant
 
+  # variance and covariances needed to calculate beta
   var1 = var(yTmp1)
   var2 = var(yTmp2)
-  intermedCov = cov(yTmp1, yTmp2)
-  betaY = sqrt(0.8/(var1+var2+2*intermedCov))
+  varX = var(x)
+  intermedCovV1V2 = cov(yTmp1, yTmp2)
+  intermedCovV1X = cov(yTmp1, x)
+  intermedCovV2X = cov(yTmp2, x)
 
-  y = betaY*yTmp1 + betaY*yTmp2 + rnorm(n,0,1)
+  betaY = sqrt(0.8/(var1 + var2 + varX + 2*(intermedCovV1V2 + intermedCovV1X + intermedCovV2X) ))
 
-  print("COMBINED MODEL WITH ALL COVARS")
-  sumxAll = summary(lm(y ~ ., data = dfC))
-  print(sumxAll$r.squared)
+  y = betaY*yTmp1 + betaY*yTmp2 + betaY*x+ rnorm(n,0,1)
 
-  print("MODEL WITH THE TWO INTERMEDIATE VARIABLES")
-  sumxAll = summary(lm(y ~ yTmp1 + yTmp2))
-  print(paste0('R sq of 2 intermediate variables on y: ', sumxAll$r.squared))
-
-
-  return(y)
+  return(list(y=y, yTmp1=yTmp1, yTmp2=yTmp2))
 
 }
