@@ -47,7 +47,7 @@ for (ncs in 1:9) {
   print(paste0('R sq of covars on y: ', sumxAll$r.squared))
 
   #print("MODEL WITH THE TWO INTERMEDIATE VARIABLES")
-  sumxAll = summary(lm(dataY$y ~ dataY$yTmp1 + dataY$yTmp2 + x))
+  sumxAll = summary(lm(dataY$y ~ dataY$tmpCS + dataY$tmpCNOTS + x))
   print(paste0('R sq of 2 intermediate variables on y: ', sumxAll$r.squared))
   
 }

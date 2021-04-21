@@ -18,8 +18,8 @@ generateContinuousY <- function(dfC, x, ncs) {
   ## generate intermediate outcomes
 
   # combine the variables in CS and CNOTS INTO COMBINED VARIABLES, RESPECTIVELY.
-  yTmp1 = rowSums(dfC[,1:ncs, drop=FALSE]) 
-  yTmp2 = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
+  tmpCS = rowSums(dfC[,1:ncs, drop=FALSE]) 
+  tmpCNOTS = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
 
   ##
@@ -29,17 +29,17 @@ generateContinuousY <- function(dfC, x, ncs) {
   # beta such that the total effect of CS and CNOTS combined is constant
 
   # variance and covariances needed to calculate beta
-  var1 = var(yTmp1)
-  var2 = var(yTmp2)
+  varCS = var(tmpCS)
+  varCNOTS = var(tmpCNOTS)
   varX = var(x)
-  intermedCovV1V2 = cov(yTmp1, yTmp2)
-  intermedCovV1X = cov(yTmp1, x)
-  intermedCovV2X = cov(yTmp2, x)
+  intermedCov_CS_CNOTS = cov(tmpCS, tmpCNOTS)
+  intermedCov_CS_X = cov(tmpCS, x)
+  intermedCov_CNOTS_X = cov(tmpCNOTS, x)
 
-  betaY = sqrt(0.8/(var1 + var2 + varX + 2*(intermedCovV1V2 + intermedCovV1X + intermedCovV2X) ))
+  betaY = sqrt(0.8/(varCS + varNOTS + varX + 2*(intermedCov_CS_CNOTS + intermedCov_CS_X + intermedCov_CNOTS_X) ))
 
-  y = betaY*yTmp1 + betaY*yTmp2 + betaY*x+ rnorm(n,0,1)
+  y = betaY*tmpCS + betaY*tmpCNOTS + betaY*x+ rnorm(n,0,1)
 
-  return(list(y=y, yTmp1=yTmp1, yTmp2=yTmp2))
+  return(list(y=y, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
 
 }
