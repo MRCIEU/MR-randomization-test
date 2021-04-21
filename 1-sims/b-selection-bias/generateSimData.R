@@ -19,6 +19,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   # ivmodel for Branson Mahalanobis distance test
   #library('ivmodel')
 
+  source('generateContinousY.R')
 
 
   ## z is a snp dosage IV with 3 levels
