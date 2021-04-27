@@ -21,6 +21,10 @@ generateContinuousY <- function(dfC, x, ncs) {
   tmpCS = rowSums(dfC[,1:ncs, drop=FALSE]) 
   tmpCNOTS = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
+  # doesn't matter that they have different variance because we account for their variance in the next step
+  print(paste0('s intermed: mean=', mean(tmpCS), ', sd=', sd(tmpCS)))
+  print(paste0('s intermed: mean=', mean(tmpCNOTS), ', sd=', sd(tmpCNOTS)))
+
 
   ##
   ## continuous outcome y
@@ -36,9 +40,15 @@ generateContinuousY <- function(dfC, x, ncs) {
   intermedCov_CS_X = cov(tmpCS, x)
   intermedCov_CNOTS_X = cov(tmpCNOTS, x)
 
-  betaY = sqrt(0.8/(varCS + varNOTS + varX + 2*(intermedCov_CS_CNOTS + intermedCov_CS_X + intermedCov_CNOTS_X) ))
+  # variance explained by CS, CNOTS and X
+  varExpl = 0.5
 
-  y = betaY*tmpCS + betaY*tmpCNOTS + betaY*x+ rnorm(n,0,1)
+  betaY = sqrt(varExpl/(varCS + varCNOTS + varX + 2*(intermedCov_CS_CNOTS + intermedCov_CS_X + intermedCov_CNOTS_X) ))
+
+  # total variance explained is 1 so variance explained by the error term is the remainder
+  betaE = sqrt((1-varExpl))
+
+  y = betaY*tmpCS + betaY*tmpCNOTS + betaY*x+ betaE*rnorm(n,0,1)
 
   return(list(y=y, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
 

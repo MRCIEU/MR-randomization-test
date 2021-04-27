@@ -55,18 +55,14 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ###
   ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
 
-  betaCs_onX = log(2^(1/ncs))
-  betaCnots_onX = log(2^(1/(nc-ncs)))
-
 
   ###
-  ### generate exposure x
+  ### generate binary exposure x
 
-  logitPart = z + rowSums(betaCs_onX*dfC[,1:ncs, drop=FALSE]) + rowSums(betaCnots_onX*dfC[,(ncs+1):nc, drop=FALSE]) 
-  pX = exp(logitPart)/(1+exp(logitPart))
-  x = rep(0, 1, n)
-  x[runif(n) <= pX] = 1
-  
+  # C AND Z ARE DETERMINANTS OF X
+  dataX = generateBinaryX(dfC, z, ncs)
+  x = dataY$x
+
 
   ###
   ### generate continuous outcome y
@@ -77,17 +73,11 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
 
 
   ###
-  ### generate selection variable s
+  ### generate binary selection variable s
 
-  # beta is set so that the total effect across all covariates affect d is constant
-  betaC = log(totalEffectCovarsSelection^(1/ncs))
-
-  # X AND (A SUBSET OF) C ARE DETERMINANTS OF SELECTION
-  logitPart = log(2)*x + rowSums(dfC[,1:ncs, drop=FALSE]*betaC) 
-  pS = exp(logitPart)/(1+exp(logitPart))
-  s = rep(0, 1, n)
-  s[runif(n) <= pS] = 1
-
+  # CS AND X ARE DETERMINANTS OF S
+  dataS = generateBinaryS(dfC, x, ncs)
+  s = dataS$s
 
 
   ##
