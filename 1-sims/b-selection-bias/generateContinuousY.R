@@ -22,8 +22,8 @@ generateContinuousY <- function(dfC, x, ncs) {
   tmpCNOTS = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
   # doesn't matter that they have different variance because we account for their variance in the next step
-  print(paste0('s intermed: mean=', mean(tmpCS), ', sd=', sd(tmpCS)))
-  print(paste0('s intermed: mean=', mean(tmpCNOTS), ', sd=', sd(tmpCNOTS)))
+  print(paste0('tmpCS intermed: mean=', mean(tmpCS), ', sd=', sd(tmpCS)))
+  print(paste0('tmpCNOTS intermed: mean=', mean(tmpCNOTS), ', sd=', sd(tmpCNOTS)))
 
 
   ##

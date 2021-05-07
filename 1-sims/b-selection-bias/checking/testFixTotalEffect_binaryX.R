@@ -14,9 +14,13 @@ n = 920000
   
 # number of covariates
 nc = 20
+print(paste0('nc: ', nc))
 
+write('i,ncs,corr,rsq', file='outXX.txt', append=FALSE)
 
-for (corrC in c(0, 0.1)) {
+print(paste0('n=', n))
+
+for (corrC in c(0, 0.2)) {
 
 
 ##
@@ -24,6 +28,8 @@ for (corrC in c(0, 0.1)) {
 
   
 for (ncs in c(1,3,6,9)) {
+
+  for (i in 1:10) {
 
   print('################')  
   print(paste0('Correlation: ', corrC, ', number of covars affecting selection:', ncs))
@@ -38,7 +44,7 @@ for (ncs in c(1,3,6,9)) {
 
   z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
 
-  dataX = generateBinaryX(dfC, z, ncs)
+  dataX = generateBinaryX(dfC, z, ncs, corrC)
 
 
   ##
@@ -51,12 +57,15 @@ for (ncs in c(1,3,6,9)) {
   ##
   ## check pseudo rsq
 
-  print("MODEL WITH THE TWO INTERMEDIATE VARIABLES")
-  mylogit <- glm(dataX$x ~ z + dataX$tmpCS + dataX$tmpCNOTS, family="binomial")
+  mylogit <- glm(dataX$x ~ z + ., data=dfC, family="binomial")
   rsq_x = rsq(mylogit)
-  print(paste0('pseudo R sq of 2 intermediate variables on x: ', rsq_x))
+  print(paste0('pseudo R sq: ', rsq_x))
 
-  
+
+  write(paste(i, ncs, corrC, rsq_x, sep=','), file='outXX.txt', append=TRUE)
+
+}  
+
 }
 
 

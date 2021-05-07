@@ -23,6 +23,8 @@ for (corrC in c(0, 0.1)) {
 
 for (ncs in c(1,3,6,9)) {
 
+  for (i in 1:10) {
+
   print('################')  
   print(paste0('Correlation: ', corrC, ', number of covars affecting selection:', ncs))
 
@@ -37,21 +39,22 @@ for (ncs in c(1,3,6,9)) {
 
   z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
 
-  dataX = generateBinaryX(dfC, z, ncs)
+  dataX = generateBinaryX(dfC, z, ncs, corrC)
       
   dataY = generateContinuousY(dfC, dataX$x, ncs)
+
+  print(paste0('y: mean=', mean(dataY$y), ', sd=', sd(dataY$y)))
 
 
   ##
   ## check total effect remains constant
 
-  #print("COMBINED MODEL WITH ALL COVARS")
   sumxAll = summary(lm(dataY$y ~ dataX$x + ., data = dfC))
-  print(paste0('R sq of covars on y: ', sumxAll$r.squared))
+  print(paste0('R sqy: ', sumxAll$r.squared))
 
-  #print("MODEL WITH THE TWO INTERMEDIATE VARIABLES")
-  sumxAll = summary(lm(dataY$y ~ dataY$tmpCS + dataY$tmpCNOTS + dataX$x))
-  print(paste0('R sq of 2 intermediate variables on y: ', sumxAll$r.squared))
+
+
+  }
   
 }
 
