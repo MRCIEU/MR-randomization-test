@@ -9,7 +9,7 @@ library('MASS')
 # rsq package for calculating rsq for binary outcome
 library('rsq')
 
-generateBinaryX <- function(dfC, z, ncs, r) {
+generateBinaryX <- function(dfC, z, ncs, corrC) {
 
   # number of covariates
   nc = ncol(dfC)
@@ -22,11 +22,12 @@ generateBinaryX <- function(dfC, z, ncs, r) {
 
   # for the covariates they all have variance 1 so correlation = covariance
   
-  if ((nc-ncs) == 1) {
+  if (ncs == 1) {
     betaCS = 1
   }
   else {
-    betaCS = sqrt(1/(ncs + 2*factorial(ncs-1)*r))
+    numPairs = (ncs*(ncs-1))/2
+    betaCS = sqrt(1/(ncs + 2*numPairs*corrC))
   }
   tmpCS = betaCS*rowSums(dfC[,1:ncs, drop=FALSE]) 
 
@@ -34,7 +35,9 @@ generateBinaryX <- function(dfC, z, ncs, r) {
     betaCNOTS = 1
   } 
   else {
-    betaCNOTS = sqrt(1/((nc-ncs) + 2*factorial(nc-ncs-1)*r))
+    ncnots = nc - ncs
+    numPairs = (ncnots*(ncnots-1))/2
+    betaCNOTS = sqrt(1/(ncnots + 2*numPairs*corrC))
   }
   tmpCNOTS = betaCNOTS*rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
@@ -71,6 +74,6 @@ generateBinaryX <- function(dfC, z, ncs, r) {
   x[runif(n) <= pX] = 1
   
 
-  return(list(x=x, tmpCS=tmpCNOTS, tmpCNOTS=tmpCNOTS))
+  return(list(x=x, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
 
 }
