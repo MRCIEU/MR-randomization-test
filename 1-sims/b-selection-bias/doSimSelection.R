@@ -11,7 +11,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc=100, ncs=100, corrC=0, totalEffectCovarsSelection=10) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection) {
 
  
   print('-------------------')

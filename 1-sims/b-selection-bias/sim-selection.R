@@ -25,7 +25,7 @@ print('-------------------')
 print(paste0("Number of covariates that affect selection: ", ncs))
 print(paste0("Number of covariates that do not affect selection: ", ncNOTs))
 print(paste0("Correlation between covariates: ", corrC))
-print(paste0("Total effect of covariates on selection: ", totalEffect))
+print(paste0("Total effect of covariates on selection (pseudo r2): ", totalEffect))
 print('-------------------')
 
 

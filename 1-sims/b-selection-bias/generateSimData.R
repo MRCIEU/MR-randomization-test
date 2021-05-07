@@ -60,7 +60,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ### generate binary exposure x
 
   # C AND Z ARE DETERMINANTS OF X
-  dataX = generateBinaryX(dfC, z, ncs)
+  dataX = generateBinaryX(dfC, z, ncs, corrC)
   x = dataY$x
 
 
@@ -76,7 +76,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ### generate binary selection variable s
 
   # CS AND X ARE DETERMINANTS OF S
-  dataS = generateBinaryS(dfC, x, ncs)
+  dataS = generateBinaryS(dfC, x, ncs, totalEffectCovarsSelection, corrC)
   s = dataS$s
 
 
