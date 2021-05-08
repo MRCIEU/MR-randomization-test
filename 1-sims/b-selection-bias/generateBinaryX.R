@@ -13,49 +13,22 @@ generateBinaryX <- function(dfC, z, ncs, corrC) {
 
   # number of covariates
   nc = ncol(dfC)
-  n = nrow(dfC)
 
   ##
   ## generate intermediate outcomes
 
   # combine the variables in CS and CNOTS INTO COMBINED VARIABLES, RESPECTIVELY.
+ 
+  tmpCS = combineDeterminants(dfC[,1:ncs, drop=FALSE])
+  tmpCNOTS = combineDeterminants(dfC[,(ncs+1):nc, drop=FALSE])
+ 
 
-  # for the covariates they all have variance 1 so correlation = covariance
-  
-  if (ncs == 1) {
-    betaCS = 1
-  }
-  else {
-    numPairs = (ncs*(ncs-1))/2
-    betaCS = sqrt(1/(ncs + 2*numPairs*corrC))
-  }
-  tmpCS = betaCS*rowSums(dfC[,1:ncs, drop=FALSE]) 
+  # generate intermediate continuous variable xCont
 
-  if ((nc-ncs) == 1) {
-    betaCNOTS = 1
-  } 
-  else {
-    ncnots = nc - ncs
-    numPairs = (ncnots*(ncnots-1))/2
-    betaCNOTS = sqrt(1/(ncnots + 2*numPairs*corrC))
-  }
-  tmpCNOTS = betaCNOTS*rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
+  xCont = combineDeterminants(data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS, z=z))
 
-
-  ##
-  ## generate intermediate continuous variable xCont
-
-  varCS = var(tmpCS)
-  varCNOTS = var(tmpCNOTS)
-  varZ = var(z)
-  intermedCov_CS_Z = cov(tmpCS, z)
-  intermedCov_CNOTS_Z = cov(tmpCNOTS, z)
-  intermedCov_CS_CNOTS = cov(tmpCS, tmpCNOTS)
-
-  betaXCont = sqrt(1/(varCS + varCNOTS + varZ + 2*(intermedCov_CS_Z + intermedCov_CNOTS_Z + intermedCov_CS_CNOTS) ))
-  xCont = betaXCont*tmpCS + betaXCont*tmpCNOTS + betaXCont*z
-
-
+  # ********* TESTING NO EFFECT OF CS ON X
+  #xCont = combineDeterminants(data.frame(tmpCNOTS=tmpCNOTS, z=z))
 
   print(paste0('x intermed: mean=', mean(xCont), ', sd=', sd(xCont)))
 

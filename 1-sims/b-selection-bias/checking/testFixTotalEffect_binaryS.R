@@ -5,6 +5,7 @@
 
 source('../generateBinaryS.R')
 source('../generateBinaryX.R')
+source('../combineDeterminants.R')
 
 library('MASS')
 
@@ -44,6 +45,7 @@ for (ncs in c(1,3,6,9)) {
   dataX = generateBinaryX(dfC, z, ncs, corrC)
   dataS = generateBinaryS(dfC, dataX$x, ncs, pseudoR2, corrC)
 
+
   ##
   ## check distribution of variable X has probability case = 0.1
 
@@ -51,13 +53,8 @@ for (ncs in c(1,3,6,9)) {
   print(paste0('proportion of X cases: ', propXCases))
 
 
-
-
   ##
   ## check distribution of variable S has 10% selected
-
-  propXCases = length(which(dataX$x==1))/n
-  print(paste0('proportion of X cases: ', propXCases))
 
   propSelected = length(which(dataS$s==1))/n
   print(paste0('proportion selected: ', propSelected))

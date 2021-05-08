@@ -20,18 +20,7 @@ generateBinaryS <- function(dfC, x, ncs, r, corrC) {
 
   # combine the variables in CS INTO COMBINED VARIABLES
 
-  print(corrC)
-
-  if (ncs == 1) {
-    betaCS = 1
-  }
-  else {
-    numPairs = (ncs*(ncs-1))/2
-    print(numPairs)
-    betaCS = sqrt(1/(ncs + 2*numPairs*corrC))
-  }
-  tmpCS = betaCS*rowSums(dfC[,1:ncs, drop=FALSE])
-
+  tmpCS = combineDeterminants(dfC[,1:ncs, drop=FALSE])
   print(paste0('tmpCS: mean=', mean(tmpCS), ', sd=', sd(tmpCS)))
 
   ##
@@ -40,11 +29,7 @@ generateBinaryS <- function(dfC, x, ncs, r, corrC) {
   # use variance and covariances of intermed variables to find right beta such that
   # the total effect of CS and X combined is constant
 
-  varCS = var(tmpCS)
-  varX = var(x)
-  intermedCov_CS_X = cov(tmpCS, x)
-  betaSCont = sqrt(1/(varCS + varX + 2*intermedCov_CS_X))
-  sCont = betaSCont*tmpCS + betaSCont*x
+  sCont = combineDeterminants(data.frame(tmpCS=tmpCS, x=x))
 
   print(paste0('s intermed: mean=', mean(sCont), ', sd=', sd(sCont)))
 

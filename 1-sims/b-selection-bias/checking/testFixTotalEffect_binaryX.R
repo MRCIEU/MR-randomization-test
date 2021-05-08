@@ -6,6 +6,7 @@
 sink('out-testFixTotalEffect_binaryX.txt')
 
 source('../generateBinaryX.R')
+source('../combineDeterminants.R')
 
 library('MASS')
 
