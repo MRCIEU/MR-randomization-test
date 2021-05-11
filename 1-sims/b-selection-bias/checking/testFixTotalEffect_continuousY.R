@@ -7,19 +7,22 @@ sink('out-testFixTotalEffect_continousY.txt')
 
 source('../generateContinuousY.R')
 source('../generateBinaryX.R')
+source('../combineDeterminants.R')
 
 library('MASS')
 
 # number in sample
 n = 350000
   
+write('i,nc, ncs,corr,rsq', file='outY.txt', append=FALSE)
+
 # number of covariates
-for (nc in c(20, 40)) {
+for (nc in c(20, 10)) {
 
 print(paste0('####### NC: ', nc))
 
 
-for (corrC in c(0, 0.1)) {
+for (corrC in c(0, 0.4, 0.8)) {
 
 for (ncs in c(1,3,6,9)) {
 
@@ -50,9 +53,10 @@ for (ncs in c(1,3,6,9)) {
   ## check total effect remains constant
 
   sumxAll = summary(lm(dataY$y ~ dataX$x + ., data = dfC))
-  print(paste0('R sqy: ', sumxAll$r.squared))
+  rsq = sumxAll$r.squared
+  print(paste0('R sqy: ', rsq))
 
-
+  write(paste(i, nc, ncs, corrC, rsq, sep=','), file='outY.txt', append=TRUE)
 
   }
   

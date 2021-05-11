@@ -17,12 +17,12 @@ print(outfile)
 # number in sample
 n = 920000
 
-write('i,ncs,corr,rsq', file=outfile, append=FALSE)
+write('i,nc, ncs,corr,rsq', file=outfile, append=FALSE)
 
 # number of covariates
 for (nc in c(20, 10)) {
 
-for (corrC in c(0, 0.2)) {
+for (corrC in c(0, 0.4, 0.8)) {
 
 for (ncs in c(1,3,6,9)) {
 
@@ -68,7 +68,7 @@ for (ncs in c(1,3,6,9)) {
   print(paste0('pseudo R sq: ', rsq_s))
 
 
-  write(paste(i, ncs, corrC, rsq_s, sep=','), file=outfile, append=TRUE)
+  write(paste(i, nc, ncs, corrC, rsq_s, sep=','), file=outfile, append=TRUE)
 }
   
 }

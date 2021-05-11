@@ -1,5 +1,5 @@
 
-combineDeterminants <- function(determinants) {
+combineDeterminants <- function(determinants, varExpl=1) {
 
 
   if (ncol(determinants) == 1) {
@@ -11,11 +11,13 @@ combineDeterminants <- function(determinants) {
 
     variances = sapply(determinants, var)
 
-    beta = sqrt(1/(sum(variances) + 2*sum(pairWiseCov)))
+    beta = sqrt(varExpl/(sum(variances) + 2*sum(pairWiseCov)))
   }
   
+  # total variance explained is 1 so variance explained by the error term is the remainder
+  betaE = sqrt((1-varExpl))
 
-  tmp = beta*rowSums(determinants)
+  tmp = beta*rowSums(determinants) + betaE*rnorm(n, 0, 1)
 
   return(tmp)
 

@@ -12,16 +12,16 @@ library('MASS')
 
 # number in sample
 n = 920000
-  
+print(paste0('n=', n)) 
+
+write('i,nc, ncs,corr,rsq', file='outXX.txt', append=FALSE)
+
 # number of covariates
-nc = 20
+for (nc in c(20)) {
+
 print(paste0('nc: ', nc))
 
-write('i,ncs,corr,rsq', file='outXX.txt', append=FALSE)
-
-print(paste0('n=', n))
-
-for (corrC in c(0, 0.2)) {
+for (corrC in c(0, 0.4, 0.8)) {
 
 
 ##
@@ -29,6 +29,7 @@ for (corrC in c(0, 0.2)) {
 
   
 for (ncs in c(1,3,6,9)) {
+#for (ncs in c(6)) {
 
   for (i in 1:10) {
 
@@ -62,14 +63,13 @@ for (ncs in c(1,3,6,9)) {
   rsq_x = rsq(mylogit)
   print(paste0('pseudo R sq: ', rsq_x))
 
-
-  write(paste(i, ncs, corrC, rsq_x, sep=','), file='outXX.txt', append=TRUE)
+  write(paste(i, nc, ncs, corrC, rsq_x, sep=','), file='outXX.txt', append=TRUE)
 
 }  
 
 }
 
-
+}
 }
 
 sink()
