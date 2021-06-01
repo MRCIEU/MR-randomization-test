@@ -71,7 +71,17 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection) {
 
   }
 
-  indtReject = (min(individualPvalues)*nc)<0.05
+  bonfReject = (min(individualPvalues)*nc)<0.05
+
+
+  ## Reject using actual number of independent tests (from correlation)
+  numIndepTests = 1+(nc-1)*(1-corrC)
+  pThresh = 0.05/numIndepTests
+  indtReject = min(individualPvalues)<pThresh
+
+  
+
+
 
 
   ###
@@ -111,7 +121,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection) {
   pvalue = length(which(permTestStats>=t))/nPerms
   print(paste0("Permutation P value: ", pvalue))
   
-  return(c(pvalue, individualPvalues, indtReject))
+  return(c(pvalue, individualPvalues, bonfReject, indtReject))
 
 }
 

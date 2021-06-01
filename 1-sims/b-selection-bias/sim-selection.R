@@ -38,7 +38,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, res
 
   filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "_", seed, ".txt")
 
-  cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',indep_bonf_reject'), file=paste0(resDir, filename), sep="\n", append=FALSE)
+  cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtReject'), file=paste0(resDir, filename), sep="\n", append=FALSE)
 
   for (i in 1:50) {
   

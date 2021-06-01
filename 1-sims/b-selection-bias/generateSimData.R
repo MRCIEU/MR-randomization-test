@@ -19,8 +19,10 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   # ivmodel for Branson Mahalanobis distance test
   #library('ivmodel')
 
-  source('generateContinousY.R')
-
+  source('generateContinuousY.R')
+  source('generateContinuousX.R')
+  source('combineDeterminants.R')
+  source('generateBinaryS.R')
 
   ## z is a snp dosage IV with 3 levels
   ## x is a binary exposure
@@ -60,8 +62,8 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ### generate binary exposure x
 
   # C AND Z ARE DETERMINANTS OF X
-  dataX = generateBinaryX(dfC, z, ncs, corrC)
-  x = dataY$x
+  dataX = generateContinuousX(dfC, z, ncs)
+  x = dataX$x
 
 
   ###
