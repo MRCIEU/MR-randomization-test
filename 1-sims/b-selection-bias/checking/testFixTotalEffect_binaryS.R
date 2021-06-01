@@ -5,26 +5,18 @@
 
 source('../generateBinaryS.R')
 source('../generateBinaryX.R')
+source('../generateContinuousX.R')
 source('../combineDeterminants.R')
 
 library('MASS')
 
-args = commandArgs(trailingOnly=TRUE)
-pseudoR2 = args[1]
-outfile = paste0('outS', gsub("\\.", "_", pseudoR2), '.txt')
-print(outfile)
 
-# number in sample
-n = 920000
 
-write('i,nc, ncs,corr,rsq', file=outfile, append=FALSE)
+checkBinaryS <- function(zType, xType, nc, ncs, corrC, intendedrsq) {
 
-# number of covariates
-for (nc in c(20, 10)) {
+  # number in sample
+  n = 920000
 
-for (corrC in c(0, 0.4, 0.8)) {
-
-for (ncs in c(1,3,6,9)) {
 
   for (i in 1:10) {
 
@@ -41,9 +33,20 @@ for (ncs in c(1,3,6,9)) {
   dfC = as.data.frame(dfC)
 
   # generate z, then x using z, then s using CS and x
-  z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
-  dataX = generateBinaryX(dfC, z, ncs, corrC)
-  dataS = generateBinaryS(dfC, dataX$x, ncs, pseudoR2, corrC)
+  if(zType=="dosage") {
+    z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
+  } else {
+    z = rnorm(n)
+  }
+
+  if (xType=="binary") {
+    dataX = generateBinaryX(dfC, z, ncs, corrC, n)
+  }
+  else {
+    dataX = generateContinuousX(dfC, z, ncs)
+  }
+
+  dataS = generateBinaryS(dfC, dataX$x, ncs, intendedrsq, corrC)
 
 
   ##
@@ -63,15 +66,37 @@ for (ncs in c(1,3,6,9)) {
   ##
   ## check pseudo rsq
 
-  mylogit <- glm(dataS$s ~ dataX$x + ., data=dfC[,1:ncs, drop=FALSE], family="binomial")
-  rsq_s = rsq(mylogit)
-  print(paste0('pseudo R sq: ', rsq_s))
+  mylinear <- lm(dataS$s ~ dataX$x + ., data=dfC[,1:ncs, drop=FALSE])
+  rsq_s = rsq(mylinear)
+  print(paste0('R sq: ', rsq_s))
 
-
-  write(paste(i, nc, ncs, corrC, rsq_s, sep=','), file=outfile, append=TRUE)
-}
+  outfile = paste0('outS', gsub("\\.", "_", intendedrsq), '.txt')
+  write(paste(i, zType, xType, nc, ncs, corrC, rsq_s, propSelected, sep=','), file=outfile, append=TRUE)
+  
+  }
   
 }
-}
 
-}
+
+
+args = commandArgs(trailingOnly=TRUE)
+intendedrsq = args[1]
+outfile = paste0('outS', gsub("\\.", "_", intendedrsq), '.txt')
+print(outfile)
+
+
+write('i,zType,xType,nc,ncs,corr,rsq,sProp', file=outfile, append=FALSE)
+
+params <- expand.grid(
+  zType=c("grs", "dosage"),
+  xType=c("continuous", "binary"),
+  nc = c(10, 20),
+  corrC = c(0,0.4,0.8),
+  ncs=c(1,3,6,9)
+)
+
+
+apply(params, 1, function(x) checkBinaryS(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC']), intendedrsq=intendedrsq, xType=x['xType']))
+
+
+
