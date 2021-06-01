@@ -11,20 +11,13 @@ source('../combineDeterminants.R')
 
 library('MASS')
 
-# number in sample
-n = 350000
   
-write('i,nc, ncs,corr,rsq', file='outY.txt', append=FALSE)
-
-# number of covariates
-for (nc in c(20, 10)) {
-
-print(paste0('####### NC: ', nc))
 
 
-for (corrC in c(0, 0.4, 0.8)) {
+checkContinuousY <- function(zType, nc, ncs, corrC) {
 
-for (ncs in c(1,3,6,9)) {
+  # number in sample
+  n = 350000
 
   for (i in 1:10) {
 
@@ -40,10 +33,14 @@ for (ncs in c(1,3,6,9)) {
   dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=corrCMat, empirical=FALSE)
   dfC = as.data.frame(dfC)
 
-  z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
+  if(zType=="dosage") {
+    z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
+  } else {
+    z = rnorm(n)
+  }
 
-  dataX = generateBinaryX(dfC, z, ncs, corrC)
-      
+  dataX = generateBinaryX(dfC, z, ncs, corrC, n)
+  
   dataY = generateContinuousY(dfC, dataX$x, ncs)
 
   print(paste0('y: mean=', mean(dataY$y), ', sd=', sd(dataY$y)))
@@ -56,14 +53,31 @@ for (ncs in c(1,3,6,9)) {
   rsq = sumxAll$r.squared
   print(paste0('R sqy: ', rsq))
 
-  write(paste(i, nc, ncs, corrC, rsq, sep=','), file='outY.txt', append=TRUE)
+
+  print(quantile(dataY$y))
+  ks=ks.test(dataY$y, 'pnorm')
+  print(paste0('KS test for normality: ', ks$statistic, ', p=', ks$p.value))
+
+
+  write(paste(i, zType, nc, ncs, corrC, rsq, sep=','), file='outY.txt', append=TRUE)
 
   }
   
 }
 
-}
 
-}
+write('i,zType,nc,ncs,corr,rsq', file='outY.txt', append=FALSE)
+
+params <- expand.grid(
+  zType=c("grs", "dosage"),
+  nc = c(10, 20),
+  corrC = c(0,0.4,0.8),
+  ncs=c(1,3,6,9)
+)
+
+apply(params, 1, function(x) checkContinuousY(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC'])))
+
+
+
 
 sink()
