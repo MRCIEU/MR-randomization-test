@@ -13,3 +13,13 @@ Rscript testMD.R
 matlab -r plottest
 ```
 
+
+
+## Check the rsq and distribution of derived variables
+
+```bash
+qsub j-testFixTotalEffect_binaryX.sh
+qsub j-testFixTotalEffect_continuousX.sh
+qsub j-testFixTotalEffect_continuousY.sh
+qsub j-testFixTotalEffect_binaryS.sh
+```
