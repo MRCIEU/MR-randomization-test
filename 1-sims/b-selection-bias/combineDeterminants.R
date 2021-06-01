@@ -1,6 +1,7 @@
 
 combineDeterminants <- function(determinants, varExpl=1) {
 
+  n = nrow(determinants)
 
   if (ncol(determinants) == 1) {
      beta = 1
