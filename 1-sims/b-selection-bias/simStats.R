@@ -4,9 +4,9 @@
 simStats <- function(params) {
 
   ncs = params$ncs
-  ncNOTs = params$ncNOTs
-  corrC = params$corrs
-  totalEffect = params$or
+  ncNOTs = params$ncNotS
+  corrC = params$rCovars
+  totalEffect = params$rSelection
 
   resDir=Sys.getenv('RES_DIR')
 
@@ -60,7 +60,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for bonferoni correction approach
 
-  numBonfReject = length(which(simRes$indep_bonf_reject == 1))
+  numBonfReject = length(which(simRes$bonf_reject == 1))
   powerBon = numBonfReject/numRes
 
   mcseBon = (powerBon*(1-powerBon)/numRes)^0.5
@@ -69,16 +69,8 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for number of independent tests correction
 
-  # find whether each iteration passed the indep test threshold
-  numCovars = ncs+ncNOTs
-  numIndepTests = 1+(numCovars-1)*(1-corrC)
-  pThresh = 0.05/numIndepTests
-  pCols = paste0('p', 1:numCovars)
-
-  simRes$indepRes = apply(simRes, 1, indepCheck, pCols=pCols, pThresh=pThresh)
-
   # calculated power/mcse
-  numIndepReject = length(which(simRes$indepRes == 1))
+  numIndepReject = length(which(simRes$indtReject == 1))
   powerIndep = numIndepReject/numRes
 
   mcseIndep = (powerIndep*(1-powerIndep)/numRes)^0.5
@@ -92,7 +84,7 @@ simStats <- function(params) {
 
 indepCheck <- function(rowVec, pCols, pThresh) {
 
-  # for a particular sim iteraction, count the number of tests is a pvalue less than pThresh
+  # for a particular sim iteration, count the number of tests with a pvalue less than pThresh
   numBelow = length(which(rowVec[pCols]<pThresh))
 
   # return a boolean - whether at least 1 of the p values is below pThresh

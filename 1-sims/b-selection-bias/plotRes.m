@@ -16,50 +16,38 @@ markersizex = 11;
 allx = dataset('file', strcat(resDir, '/sims/sim-res.csv'), 'delimiter', ',');
 
 % convert to numeric (needed because when not all sim results are there then NaN'a mean the columns are strings)
-allx.powerBranson = str2double(allx.powerBranson);
-allx.mcseBranson = str2double(allx.mcseBranson);
-allx.powerBon = str2double(allx.powerBon);
-allx.mcseBon = str2double(allx.mcseBon);
-allx.powerInd = str2double(allx.powerInd);
-allx.mcseInd = str2double(allx.mcseInd);
+%allx.powerBranson = str2double(allx.powerBranson);
+%allx.mcseBranson = str2double(allx.mcseBranson);
+%allx.powerBon = str2double(allx.powerBon);
+%allx.mcseBon = str2double(allx.mcseBon);
+%allx.powerInd = str2double(allx.powerInd);
+%allx.mcseInd = str2double(allx.mcseInd);
 
 
 % sim params
-all_ncNOTs=[1,5,10,20,40];
-all_corr=[0,0.1,0.2,0.4,0.8];
-ors=[1.1, 1.4, 2];
-ncs=[1,10,50];
+all_ncs=[2,10,50];
+all_ncNOTs=[2,10,50];
+all_rCovars=[0,0.4,0.8];
+all_rSelection=[0.1, 0.2];
 
+for m=1:length(all_ncs)
 
-for m=1:length(ncs)
-
-thisncs = ncs(m);
-
-if (thisncs==1)
-  all_ncNOTs=[1,2,5,10];
-elseif(thisncs == 10)
-  all_ncNOTs=[1,5,10,20,40];
-elseif(thisncs == 50)
-  all_ncNOTs=[1,25,50,100];
-end
-
-for k=1:length(ors)
-
-thisor = ors(k);
+for k=1:length(all_rSelection)
 
 h=figure('DefaultAxesFontSize',14);
 
-
 % plot results for each ncnots and corr combination
 for i=1:length(all_ncNOTs)
-	for j=1:length(all_corr)
+	for j=1:length(all_rCovars)
 
+		ncs = all_ncs(m);
+		rSel = all_rSelection(k);
 		ncNOTs=all_ncNOTs(i);
-		corr=all_corr(j);
+		rCovars=all_rCovars(j);
 
 		posx=i+(j-1)*0.1;
 
-		ix = find(allx.ncs==thisncs & allx.ncNOTs == ncNOTs & allx.corrs ==corr & allx.or == thisor);
+		ix = find(allx.ncs==ncs & allx.ncNotS == ncNOTs & allx.rCovars ==rCovars & allx.rSelection == rSel);
 
 		% branson
 		lower=allx.powerBranson(ix) - 1.96*allx.mcseBranson(ix);
@@ -93,18 +81,34 @@ end
 % set xaxis values
 labelx = all_ncNOTs;
 set(gca,'XTickLabel', labelx);
-set(gca,'XTick', [1.1;2.1;3.1;4.1;5.1]);
+set(gca,'XTick', [1.1;2.1;3.1]);
+
+set(gcf, 'unit', 'inches');
+figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon], {'Branson corr=0';'Branson corr=0.1';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Bonf corr=0';'Bonf corr=0.1';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8'});
+lx=legend([hxBran,hxBon,hxInd], {'Branson corr=0';'Branson corr=0.4';'Branson corr=0.8';'Bonf corr=0';'Bonf corr=0.4';'Bonf corr=0.8';'Indep corr=0';'Indep corr=0.4';'Indep corr=0.8'},'Location','NorthEastOutside');
+
 lx.FontSize = 12;
 
 % set axis labels
 xlabel('Number of covariates not affecting selection', 'FontSize', 14);
 ylabel('Statistical power (Monte Carlo SE)');
 
+ylim([0 1]);
+
+
+% stop figure becoming narrower when legend is outside plot, by changing overall size to the original figure size plus the legend size
+set(lx, 'unit', 'inches');
+legend_size = get(lx, 'position');
+figure_size(3) = figure_size(3) + legend_size(3);
+set(gcf, 'position', figure_size);
+
+pos = get(h,'Position');
+set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
+
 % save to file
-saveas(h, strcat(resDir, '/sims/fig-sim-selection-',num2str(thisncs),'-OR',num2str(thisor),'.pdf'));
+saveas(h, strcat(resDir, '/sims/fig-sim-selection-',num2str(ncs),'-rSel',num2str(rSel),'.pdf'));
 
 
 end

@@ -5,32 +5,12 @@
 
 params <- expand.grid(
 
-	corrs=c(0,0.1,0.2,0.4,0.8),
-	or=c(1.1, 1.4, 2),
-	ncs=c(10,50)
+	rCovars=c(0,0.4,0.8),
+	rSelection=c(0.1, 0.2),
+	ncNotS=c(2,10,50),
+	ncs=c(2,10,50)
 )
 
-##
-## add nc_nots settings, that are relative to ncs number
-
-# {1, ncs/2, ncs, 2*ncs, 4*ncs}
-numParams = nrow(params)
-
-# replicate so 4 versions of params for each nc_nots value
-params = rbind(params, params, params, params, params)
-
-# set nc_nots values for each nc_nots set of params
-params$ncNOTs[1:numParams] = 1
-params$ncNOTs[(numParams+1):(2*numParams)] = params$ncs[(numParams+1):(2*numParams)]/2
-params$ncNOTs[(2*numParams+1):(3*numParams)] = params$ncs[(2*numParams+1):(3*numParams)]
-params$ncNOTs[(3*numParams+1):(4*numParams)] = 2*params$ncs[(3*numParams+1):(4*numParams)]
-params$ncNOTs[(4*numParams+1):(5*numParams)] = 4*params$ncs[(4*numParams+1):(5*numParams)]
-
-
-# add params where ncs=1
-# 1, 2, 5, 10
-params1 = expand.grid(corrs=c(0,0.1,0.2,0.4,0.8),or=c(1.1, 1.4, 2), ncs=c(1), ncNOTs=c(1,2,5,10))
-params = rbind(params, params1)
 
 
 ##
