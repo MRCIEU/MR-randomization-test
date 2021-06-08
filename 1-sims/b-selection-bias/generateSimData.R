@@ -20,8 +20,9 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   #library('ivmodel')
 
   source('generateContinuousY.R')
-  source('generateContinuousX.R')
+  source('generateContinuousX2.R')
   source('combineDeterminants.R')
+  source('combineDeterminants2.R')
   source('generateBinaryS.R')
 
   ## z is a snp dosage IV with 3 levels
@@ -62,7 +63,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection) {
   ### generate binary exposure x
 
   # C AND Z ARE DETERMINANTS OF X
-  dataX = generateContinuousX(dfC, z, ncs)
+  dataX = generateContinuousX2(dfC, z, ncs)
   x = dataX$x
 
 
