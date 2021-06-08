@@ -3,19 +3,18 @@
 ###
 ### This version splits the beta coefficients between the covariates and generates intermediate variables, that are then used to generate y
 
-sink('out-testFixTotalEffect_binaryX.txt')
+#sink('out-testFixTotalEffect_binaryX.txt')
 
 plotHist=FALSE
-source('../generateContinuousX.R')
-source('../combineDeterminants.R')
+source('../generateContinuousX2.R')
+source('../combineDeterminants2.R')
 library('MASS')
 
 
 
 
-checkContinuousX <- function(zType, nc, ncs, corrC) {
+checkContinuousX2 <- function(zType, nc, ncs, corrC) {
 
-  print(params)
 
   # number in sample
   n = 920000
@@ -32,7 +31,6 @@ checkContinuousX <- function(zType, nc, ncs, corrC) {
   print('################')  
   print(paste0('Correlation: ', corrC, ', number of covars affecting selection:', ncs))
 
-  print(class(corrC))
 
   ##
   ## generate covariates, instrument Z and exposure X
@@ -48,7 +46,7 @@ checkContinuousX <- function(zType, nc, ncs, corrC) {
     z = rnorm(n)
   }
 
-  dataX = generateContinuousX(dfC, z, ncs)
+  dataX = generateContinuousX2(dfC, z, ncs)
 
   print(paste0('x: mean=', mean(dataX$x), ', sd=', sd(dataX$xy)))
 
@@ -67,13 +65,14 @@ checkContinuousX <- function(zType, nc, ncs, corrC) {
   # check iv strength (fstat)
   mylinear <- lm(dataX$x ~ z)
   sumx = summary(mylinear)
+  rsq_iv = sumx$r.squared
 
 #  print(sumx)
 #  print(sumx$fstatistic$value)
 #  print(names(sumx))
-#  print(class(sumx$fstatistic[1]))
+#  print(class(sumx$fstatistic))
 
-  write(paste(i, zType, nc, ncs, corrC, rsq_x, sumx$r.squared, sep=','), file='out/outXcont.txt', append=TRUE)
+  write(paste(i, zType, nc, ncs, corrC, rsq_x, rsq_iv, sumx$fstatistic[1], sep=','), file='out/outXcont2.txt', append=TRUE)
 
   }
 
@@ -81,19 +80,20 @@ checkContinuousX <- function(zType, nc, ncs, corrC) {
 
 
 
-write('i,zType,nc,ncs,corr,rsq, rsq_zonly', file='out/outXcont.txt', append=FALSE)
+write('i,zType,nc,ncs,corr,rsq,rsqIV,fstatIV', file='out/outXcont2.txt', append=FALSE)
 
 params <- expand.grid(
-  zType=c("grs", "dosage"),
+  #zType=c("grs", "dosage"),
+  zType=c("grs"),
   nc = c(10, 20),
   corrC = c(0,0.4,0.8),
   ncs=c(1,3,6,9)
 )
 
 
-apply(params, 1, function(x) checkContinuousX(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC'])))
+apply(params, 1, function(x) checkContinuousX2(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC'])))
 
 
 
-sink()
+#sink()
 

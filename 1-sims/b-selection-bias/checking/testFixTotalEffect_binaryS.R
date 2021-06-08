@@ -70,7 +70,7 @@ checkBinaryS <- function(zType, xType, nc, ncs, corrC, intendedrsq) {
   rsq_s = rsq(mylinear)
   print(paste0('R sq: ', rsq_s))
 
-  outfile = paste0('outS', gsub("\\.", "_", intendedrsq), '.txt')
+  outfile = paste0('out/outS', gsub("\\.", "_", intendedrsq), '.txt')
   write(paste(i, zType, xType, nc, ncs, corrC, rsq_s, propSelected, sep=','), file=outfile, append=TRUE)
   
   }
@@ -81,7 +81,7 @@ checkBinaryS <- function(zType, xType, nc, ncs, corrC, intendedrsq) {
 
 args = commandArgs(trailingOnly=TRUE)
 intendedrsq = args[1]
-outfile = paste0('outS', gsub("\\.", "_", intendedrsq), '.txt')
+outfile = paste0('out/outS', gsub("\\.", "_", intendedrsq), '.txt')
 print(outfile)
 
 

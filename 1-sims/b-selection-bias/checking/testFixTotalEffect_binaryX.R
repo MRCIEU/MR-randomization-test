@@ -103,7 +103,7 @@ checkBinaryX <- function(zType, nc, ncs, corrC) {
   rsq_x = sumx$r.squared
   print(paste0("Rsq x~x+covars: ", rsq_x))
 
-  write(paste(i, zType, nc, ncs, corrC, rsq_x,propXCases, sep=','), file='outXX.txt', append=TRUE)
+  write(paste(i, zType, nc, ncs, corrC, rsq_x,propXCases, sep=','), file='out/outX.txt', append=TRUE)
 
   }
 
@@ -111,7 +111,7 @@ checkBinaryX <- function(zType, nc, ncs, corrC) {
 
 
 
-write('i,zType,nc,ncs,corr,rsq,xProp', file='outXX.txt', append=FALSE)
+write('i,zType,nc,ncs,corr,rsq,xProp', file='out/outX.txt', append=FALSE)
 
 params <- expand.grid(
   zType=c("grs", "dosage"),

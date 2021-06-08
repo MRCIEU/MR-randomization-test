@@ -6,7 +6,7 @@
 sink('out-testFixTotalEffect_continousY.txt')
 
 source('../generateContinuousY.R')
-source('../generateBinaryX.R')
+source('../generateContinuousX.R')
 source('../combineDeterminants.R')
 
 library('MASS')
@@ -39,7 +39,7 @@ checkContinuousY <- function(zType, nc, ncs, corrC) {
     z = rnorm(n)
   }
 
-  dataX = generateBinaryX(dfC, z, ncs, corrC, n)
+  dataX = generateContinuousX(dfC, z, ncs)
   
   dataY = generateContinuousY(dfC, dataX$x, ncs)
 
@@ -59,14 +59,14 @@ checkContinuousY <- function(zType, nc, ncs, corrC) {
   print(paste0('KS test for normality: ', ks$statistic, ', p=', ks$p.value))
 
 
-  write(paste(i, zType, nc, ncs, corrC, rsq, sep=','), file='outY.txt', append=TRUE)
+  write(paste(i, zType, nc, ncs, corrC, rsq, sep=','), file='out/outY.txt', append=TRUE)
 
   }
   
 }
 
 
-write('i,zType,nc,ncs,corr,rsq', file='outY.txt', append=FALSE)
+write('i,zType,nc,ncs,corr,rsq', file='out/outY.txt', append=FALSE)
 
 params <- expand.grid(
   zType=c("grs", "dosage"),

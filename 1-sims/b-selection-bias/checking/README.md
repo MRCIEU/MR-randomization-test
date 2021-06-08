@@ -23,3 +23,12 @@ qsub j-testFixTotalEffect_continuousX.sh
 qsub j-testFixTotalEffect_continuousY.sh
 qsub j-testFixTotalEffect_binaryS.sh
 ```
+
+Then these are the versions fixing the IV strength also (i.e. fixing the amount of variance
+in X explained by Z):
+
+```bash
+qsub j-testFixTotalEffect_continuousX2.sh
+qsub j-testFixTotalEffect_continuousY.sh
+qsub j-testFixTotalEffect_binaryS.sh
+```
