@@ -83,8 +83,7 @@ checkContinuousX2 <- function(zType, nc, ncs, corrC) {
 write('i,zType,nc,ncs,corr,rsq,rsqIV,fstatIV', file='out/outXcont2.txt', append=FALSE)
 
 params <- expand.grid(
-  #zType=c("grs", "dosage"),
-  zType=c("grs"),
+  zType=c("grs", "dosage"),
   nc = c(10, 20),
   corrC = c(0,0.4,0.8),
   ncs=c(1,3,6,9)
