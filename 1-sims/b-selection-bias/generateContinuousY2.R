@@ -26,11 +26,15 @@ generateContinuousY2 <- function(dfC, x, ncs) {
   print(paste0('tmpCNOTS intermed: mean=', mean(tmpCNOTS), ', sd=', sd(tmpCNOTS)))
 
 
+
+  tmps = combineDeterminants3(tmpCS, tmpCNOTS, 0.5, 0.5)
+
+
   ##
   ## continuous outcome y
 
-  y = combineDeterminants2(data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS), x, 0.2, 0.2)
+  y = combineDeterminants3(x, tmps, 0.3, 0.2)
 
-  return(list(y=y, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
+  return(list(y=y, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS, tmps=tmps))
 
 }
