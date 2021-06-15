@@ -20,6 +20,10 @@ ncNOTs = as.numeric(args[2])
 nc = ncs + ncNOTs
 corrC = as.numeric(args[3])
 totalEffect = as.numeric(args[4])
+ivEffect = as.numeric(args[5])
+
+if (is.na(ivEffect))
+  ivEffect = 0.1
 
 print('-------------------')
 print(paste0("Number of covariates that affect selection: ", ncs))
@@ -32,24 +36,24 @@ print('-------------------')
 library(parallel)
 cl <- makeCluster(10)
 clusterSetRNGStream(cl, iseed = 42)
-y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, resDir) {
+y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, ivEffect, resDir) {
 
   source('doSimSelection.R')
 
-  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "_", seed, ".txt")
+  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, '-iv', ivEffect, "_", seed, ".txt")
 
   cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtReject'), file=paste0(resDir, filename), sep="\n", append=FALSE)
 
   for (i in 1:50) {
   
-    pvalue = doSimSelection(nc, ncs, corrC, totalEffect)
+    pvalue = doSimSelection(nc, ncs, corrC, totalEffect, ivEffect)
   
     cat(paste0(i, ",",paste(pvalue, collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   
 }
 
 
-}, nc=nc, ncs=ncs, corrC=corrC, ncNOTs=ncNOTs, totalEffect=totalEffect, resDir=resDir)
+}, nc=nc, ncs=ncs, corrC=corrC, ncNOTs=ncNOTs, totalEffect=totalEffect, ivEffect=ivEffect, resDir=resDir)
 stopCluster(cl)
 
 

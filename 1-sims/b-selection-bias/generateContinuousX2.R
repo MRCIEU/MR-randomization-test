@@ -7,7 +7,7 @@
 library('MASS')
 
 
-generateContinuousX2 <- function(dfC, z, ncs) {
+generateContinuousX2 <- function(dfC, z, ncs, ivRsq) {
 
 
   # number of covariates
@@ -29,7 +29,7 @@ generateContinuousX2 <- function(dfC, z, ncs) {
   ##
   ## continuous outcome y
 
-  x = combineDeterminants2(data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS), z, 0.1, 0.1)
+  x = combineDeterminants2(covars=data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS), otherdet=z, varExplOtherDet=ivRsq, varExplCovars=0.1)
 
   return(list(x=x, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
 
