@@ -40,18 +40,11 @@ generateBinaryS <- function(dfC, x, ncs, r, corrC) {
   ##
   ## binary outcome x
 
-if (r==0.1) {
-  logitPart = log(5.38)*sCont - 3.916
-} else if (r==0.2) {
-#  logitPart = log(10.9)*sCont - 4.880
-  logitPart = log(63)*sCont - 7.19  
-}
-else if (r==0.4) {
-  logitPart = log(13)*sCont - 5.150
-}
-else if (r==0.6) {
-  logitPart = log(64)*sCont - 7.500
-}
+  if (r==0.1) {
+   logitPart = log(5.38)*sCont - 3.916
+  } else if (r==0.2) {
+    logitPart = log(63)*sCont - 7.19  
+  }
 
   pS = exp(logitPart)/(1+exp(logitPart))
   s = rep(0, 1, n)
