@@ -5,7 +5,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect) {
+generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect, ivType="dosage") {
 
   ###
   ### load packages
@@ -19,7 +19,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEff
   # ivmodel for Branson Mahalanobis distance test
   #library('ivmodel')
 
-  source('generateContinuousY.R')
+  source('generateContinuousY2.R')
   source('generateContinuousX2.R')
   source('combineDeterminants.R')
   source('combineDeterminants2.R')
@@ -52,8 +52,11 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEff
   
   ## generate a IV with 3 categories
   ## use p(A1)=0.8, p(A2)=0.2, dosage probs assuming HWE = (0.8^2, 2*0.8*0.2, 0.2^2) = (0.64,0.32,0.04) 
-  z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
-  
+  if(ivType=="dosage") {
+    z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
+  } else {
+    z = rnorm(n)
+  }  
 
   ###
   ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
@@ -71,7 +74,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEff
   ### generate continuous outcome y
 
   # C AND X ARE DETERMINANTS OF Y
-  dataY = generateContinuousY(dfC, x, ncs)
+  dataY = generateContinuousY2(dfC, x, ncs)
   y = dataY$y
 
 

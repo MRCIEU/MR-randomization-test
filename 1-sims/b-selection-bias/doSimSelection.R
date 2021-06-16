@@ -11,7 +11,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection, ivEffect) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection, iv, ivEffect) {
 
  
   print('-------------------')
@@ -42,7 +42,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection, ivEffect)
   # number in sample
   n = 350000
   source('generateSimData.R')
-  simdata = generateSimData(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect)
+  simdata = generateSimData(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect, iv)
 
     
   
