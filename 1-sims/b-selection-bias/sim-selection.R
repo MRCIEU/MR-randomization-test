@@ -62,6 +62,9 @@ cl <- makeCluster(10)
 clusterSetRNGStream(cl, iseed = 42)
 y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv, ivEffect, covarsIncluded, resDir) {
 
+
+  sink(paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".log"))
+
   source('doSimSelection.R')
 
   filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".txt")
@@ -74,8 +77,9 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
   
     cat(paste0(i, ",",paste(pvalue, collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   
-}
+  }
 
+  sink()
 
 }, nc=nc, ncs=ncs, corrC=corrC, ncNOTs=ncNOTs, totalEffect=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, resDir=resDir)
 stopCluster(cl)
