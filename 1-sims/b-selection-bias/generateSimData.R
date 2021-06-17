@@ -5,19 +5,13 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect, ivType="dosage") {
+generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage") {
 
   ###
   ### load packages
 
   # use MASS for mvrnorm and polyr functions
   library('MASS')
-
-  # lmtest for coeftest
-  #library('lmtest')
-
-  # ivmodel for Branson Mahalanobis distance test
-  #library('ivmodel')
 
   source('generateContinuousY2.R')
   source('generateContinuousX2.R')
@@ -32,7 +26,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEff
   ### is the p value correct when there are dependencies between the covariates
 
   # number in sample
-  n = 350000
+  n = 920000
 
   
   print('-------------------')
@@ -82,7 +76,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEff
   ### generate binary selection variable s
 
   # CS AND X ARE DETERMINANTS OF S
-  dataS = generateBinaryS(dfC, x, ncs, totalEffectCovarsSelection, corrC)
+  dataS = generateBinaryS(dfC, x, ncs, totalEffectSelection)
   s = dataS$s
 
 

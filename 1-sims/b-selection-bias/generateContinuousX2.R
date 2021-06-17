@@ -7,7 +7,7 @@
 library('MASS')
 
 
-generateContinuousX2 <- function(dfC, z, ncs, ivRsq) {
+generateContinuousX2 <- function(dfC, z, ncs, ivRsq=0.1) {
 
 
   # number of covariates

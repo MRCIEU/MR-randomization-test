@@ -11,25 +11,12 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection, iv, ivEffect) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect) {
 
  
   print('-------------------')
   print(paste0("Number of covariates that affect selection: ", ncs, " of ", nc))
   print(paste0("Correlation between covariates: ", corrC))
-
-
-  ###
-  ### load packages
-
-  # use MASS for mvrnorm and polyr functions
-  #library('MASS')
-
-  # lmtest for coeftest
-  #library('lmtest')
-
-  # ivmodel for Branson Mahalanobis distance test
-  #library('ivmodel')
 
 
   ##
@@ -42,8 +29,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectCovarsSelection, iv, ivEff
   # number in sample
   n = 350000
   source('generateSimData.R')
-  simdata = generateSimData(n, nc, ncs, corrC, totalEffectCovarsSelection, ivEffect, iv)
-
+  simdata = generateSimData(n=n, nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv)
     
   
   ###
