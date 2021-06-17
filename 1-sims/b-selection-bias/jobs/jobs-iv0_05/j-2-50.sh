@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l walltime=120:00:00,nodes=1:ppn=10
 #PBS -o out-2-50.file
-#PBS -t 1-15
+#PBS -t 1-30
 #---------------------------------------------
 
 date
@@ -16,8 +16,7 @@ settingLine=${PBS_ARRAYID}
 
 rsqC=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f1`
 rsqS=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f2`
-
-
+covarsInc=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f3`
 
 module add languages/R-4.0.3-gcc9.1.0
 
@@ -31,7 +30,7 @@ ivEffect=0.05
 
 
 # ncs ncnots rc rSelection
-Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS $ivEffect
+Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS $ivEffect "grs" $covarsInc
 
 date
 
