@@ -11,7 +11,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded) {
 
  
   print('-------------------')
@@ -30,8 +30,25 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect) {
   n = 350000
   source('generateSimData.R')
   simdata = generateSimData(n=n, nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv)
-    
+
+
+  print(paste0('number of all covariates:', ncol(simdata$dfC)))
+  if (covarsIncluded=="half") {
+
+    dfCs = simdata$dfC[,1:ncs, drop=FALSE]
+    dfCnots = simdata$dfC[,(ncs+1):nc, drop=FALSE]
+
+    # half the number of covariates
+    dfCs = dfCs[,1:floor(ncs/2), drop=FALSE]
+    dfCnots = dfCnots[,1:floor((nc-ncs)/2), drop=FALSE]
+
+    simdata$dfC = cbind(dfCs, dfCnots)
+    nc=ncol(simdata$dfC)
+    ncs=ncol(dfCs)
+  }
+  print(paste0('number of covariates included in test:', ncol(simdata$dfC)))
   
+
   ###
   ### calculate test statistic - Mahalanobis distance
 
