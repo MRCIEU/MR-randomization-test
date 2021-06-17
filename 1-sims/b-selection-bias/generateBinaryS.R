@@ -9,7 +9,7 @@ library('MASS')
 # rsq package for calculating rsq for binary outcome
 library('rsq')
 
-generateBinaryS <- function(dfC, x, ncs, r, corrC) {
+generateBinaryS <- function(dfC, x, ncs, rsqSelection) {
 
   # number of covariates
   nc = ncol(dfC)
@@ -40,9 +40,11 @@ generateBinaryS <- function(dfC, x, ncs, r, corrC) {
   ##
   ## binary outcome x
 
-  if (r==0.1) {
+  if (rsqSelection==0.05) {
+    logitPart = log(2.885)*sCont - 3.316
+  } else if (rsqSelection==0.1) {
    logitPart = log(5.38)*sCont - 3.916
-  } else if (r==0.2) {
+  } else if (rsqSelection==0.2) {
     logitPart = log(63)*sCont - 7.19  
   }
 

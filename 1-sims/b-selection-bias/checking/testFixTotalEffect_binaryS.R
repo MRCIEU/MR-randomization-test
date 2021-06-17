@@ -46,7 +46,7 @@ checkBinaryS <- function(zType, xType, nc, ncs, corrC, intendedrsq) {
     dataX = generateContinuousX(dfC, z, ncs)
   }
 
-  dataS = generateBinaryS(dfC, dataX$x, ncs, intendedrsq, corrC)
+  dataS = generateBinaryS(dfC, dataX$x, ncs, intendedrsq)
 
 
   ##
