@@ -18,6 +18,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   source('combineDeterminants.R')
   source('combineDeterminants2.R')
   source('generateBinaryS.R')
+  source('generateCovariates.R')
 
   ## z is a snp dosage IV with 3 levels
   ## x is a binary exposure
@@ -37,20 +38,27 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   ###
   ### generate data
   
-  ## generate covariates C with particular correlation corrC  
-  corrCMat = diag(nc)
-  corrCMat[which(corrCMat == 0)] = corrC
-  covC = cor2cov(corrCMat, 1)
-  dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=covC, empirical=FALSE)
-  dfC = as.data.frame(dfC)
+  if (corrC>=0) {
+    dfC = generateCovariatesWithCorrelation(n, nc, corrC)
+  }
+  else {
+    dfC = generateCovariatesWithCorrelationDistribution(n, nc, corrC)
+  }
+
   
   ## generate a IV with 3 categories
   ## use p(A1)=0.8, p(A2)=0.2, dosage probs assuming HWE = (0.8^2, 2*0.8*0.2, 0.2^2) = (0.64,0.32,0.04) 
   if(ivType=="dosage") {
+    print('generate dosage IV')
     z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
-  } else {
+  } else if (ivType=="grs") {
+    print('generate grs IV')
     z = rnorm(n)
   }  
+  else {
+    stop("ivType not grs or dosage")
+  }
+
 
   ###
   ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.

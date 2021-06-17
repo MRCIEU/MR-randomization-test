@@ -18,27 +18,35 @@ args = commandArgs(trailingOnly=TRUE)
 ncs = as.numeric(args[1])
 ncNOTs = as.numeric(args[2])
 nc = ncs + ncNOTs
+
+# >=0: all covariates generated assuming we are sampling from a population with that correlation
+# -1: generated with a normal distributions N~(0,0.1)
 corrC = as.numeric(args[3])
+
 totalEffect = as.numeric(args[4])
 ivEffect = as.numeric(args[5])
 iv=args[6]
 
 
+
 # set default settings
-if (is.null(iv)) {
+if (is.null(iv) | is.na(iv)) {
   iv="grs"
 }
 
-if (is.na(ivEffect))
+if (is.na(ivEffect)) {
   ivEffect = 0.1
+}
+
+
 
 print('-------------------')
 print(paste0("Number of covariates that affect selection: ", ncs))
 print(paste0("Number of covariates that do not affect selection: ", ncNOTs))
 print(paste0("Correlation between covariates (r2): ", corrC))
-print(paste0("Total effect of covariates on selection (r2): ", totalEffect))
+print(paste0("Total effect of covariates and X on selection (r2): ", totalEffect))
 print(paste0("Effect of IV on X (r2):", ivEffect))
-print(paste0("IV type (either "dosage" or "grs"):", iv))
+print(paste0("IV type (either 'dosage' or 'grs'):", iv))
 print('-------------------')
 
 
@@ -49,7 +57,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
 
   source('doSimSelection.R')
 
-  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, '-iv', iv, , ivEffect, "_", seed, ".txt")
+  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "_", seed, ".txt")
 
   cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtReject'), file=paste0(resDir, filename), sep="\n", append=FALSE)
 
