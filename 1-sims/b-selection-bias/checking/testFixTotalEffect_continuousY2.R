@@ -15,10 +15,10 @@ library('MASS')
   
 
 
-checkContinuousY <- function(zType, nc, ncs, corrC) {
+checkContinuousY2 <- function(zType, nc, ncs, corrC) {
 
   # number in sample
-  n = 350000
+  n = 920000
 
   for (i in 1:10) {
 
@@ -89,7 +89,7 @@ params <- expand.grid(
   ncs=c(1,3,6,9)
 )
 
-apply(params, 1, function(x) checkContinuousY(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC'])))
+apply(params, 1, function(x) checkContinuousY2(zType=x['zType'], nc=as.numeric(x['nc']), ncs=as.numeric(x['ncs']), corrC=as.numeric(x['corrC'])))
 
 
 

@@ -17,7 +17,7 @@ library('MASS')
 checkContinuousY <- function(zType, nc, ncs, corrC) {
 
   # number in sample
-  n = 350000
+  n = 920000
 
   for (i in 1:10) {
 
