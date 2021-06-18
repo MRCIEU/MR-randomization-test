@@ -27,10 +27,17 @@ generateCovariatesWithCorrelationDistribution <- function(n, nc, corr) {
     corrCMat[which(upper.tri(corrCMat))] = rnorm(numCorrs, 0, 0.1)
 
     # turn into correlation matrix by making lower triangle equal upper triangle
-    corrCMat[lower.tri(corrCMat)]<-corrCMat[upper.tri(corrCMat)]
+    # need to transpose and grab the lower triangle since order of cells is by column without 
+    # this the result isn't symmetric about the descending diagonal
+    corrCMat[lower.tri(corrCMat)]<-t(corrCMat)[lower.tri(corrCMat)]
 
     # get covariance matrix from correlation matrix (assume var=1 for covars)
     covC = cor2cov(corrCMat, 1)
+
+    library(corpcor)
+    if (!is.positive.definite(covC)) {
+        covC = make.positive.definite(covC)
+    }
 
     # generate covariates with this covariance
     dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=covC, empirical=FALSE)
