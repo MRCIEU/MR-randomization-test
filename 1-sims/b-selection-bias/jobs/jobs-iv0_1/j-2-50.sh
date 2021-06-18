@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=120:00:00,nodes=1:ppn=10
+#PBS -l walltime=12:00:00,nodes=1:ppn=10
 #PBS -o out-2-50.file
 #PBS -t 1-30
 #---------------------------------------------
