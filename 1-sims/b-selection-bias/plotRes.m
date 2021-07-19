@@ -27,12 +27,18 @@ allx = dataset('file', strcat(resDir, '/sims/sim-res.csv'), 'delimiter', ',');
 % sim params
 all_ncs=[2,10,50];
 all_ncNOTs=[2,10,50];
-all_rCovars=[0,0.4,0.8];
-all_rSelection=[0.1, 0.2];
+all_rCovars=[0,0.2,0.4,0.8,-1];
+all_rSelection=[0.05, 0.1, 0.2];
+all_ivEffect=[0.05,0.1];
+all_covarsIncluded=[1,2];
 
 for m=1:length(all_ncs)
 
 for k=1:length(all_rSelection)
+
+for e=1:length(all_ivEffect)
+
+for c=1:length(all_covarsIncluded)
 
 h=figure('DefaultAxesFontSize',14);
 
@@ -44,10 +50,12 @@ for i=1:length(all_ncNOTs)
 		rSel = all_rSelection(k);
 		ncNOTs=all_ncNOTs(i);
 		rCovars=all_rCovars(j);
+		ivEffect=all_ivEffect(e);
+		covarsIncluded=all_covarsIncluded(c);
 
 		posx=i+(j-1)*0.1;
 
-		ix = find(allx.ncs==ncs & allx.ncNotS == ncNOTs & allx.rCovars ==rCovars & allx.rSelection == rSel);
+		ix = find(allx.ncs==ncs & allx.ncNotS == ncNOTs & allx.rCovars ==rCovars & allx.rSelection == rSel & allx.ivEffect == ivEffect & allx.covarsIncluded == covarsIncluded);
 
 		% branson
 		lower=allx.powerBranson(ix) - 1.96*allx.mcseBranson(ix);
@@ -87,7 +95,7 @@ set(gcf, 'unit', 'inches');
 figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon,hxInd], {'Branson corr=0';'Branson corr=0.4';'Branson corr=0.8';'Bonf corr=0';'Bonf corr=0.4';'Bonf corr=0.8';'Indep corr=0';'Indep corr=0.4';'Indep corr=0.8'},'Location','NorthEastOutside');
+lx=legend([hxBran,hxBon,hxInd], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';},'Location','NorthEastOutside');
 
 lx.FontSize = 12;
 
@@ -108,8 +116,13 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-saveas(h, strcat(resDir, '/sims/fig-sim-selection-',num2str(ncs),'-rSel',num2str(rSel),'.pdf'));
+filename=strcat(resDir, '/sims/fig-sim-selection-',num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
+saveas(h, filename);
 
+
+end
+
+end
 
 end
 

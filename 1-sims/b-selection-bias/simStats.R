@@ -5,8 +5,12 @@ simStats <- function(params) {
 
   ncs = params$ncs
   ncNOTs = params$ncNotS
+  nc = ncs + ncNOTs
   corrC = params$rCovars
   totalEffect = params$rSelection
+  ivEffect = params$ivEffect
+  iv=params$iv
+  covarsIncluded=params$covarsIncluded
 
   resDir=Sys.getenv('RES_DIR')
 
@@ -15,6 +19,7 @@ simStats <- function(params) {
   print(paste0("Number of covariates that do not affect selection: ", ncNOTs))
   print(paste0("Correlation between covariates: ", corrC))
   print(paste0("Total effect of covariates on selection: ", totalEffect))
+  print(paste0("Effect of IV on X: ", ivEffect))
   print('-------------------')
 
 
@@ -22,11 +27,25 @@ simStats <- function(params) {
   ### load results files
 
   seed=1
-  filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "_", seed, ".txt")
+  filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "_", seed, ".txt")
+  print(filename)
+
 
   # check if results exist yet
   if (file.exists(filename)) {
+
+    if (covarsIncluded=="all") {
     simRes = read.table(filename, sep=',', header=1)
+    }
+    else {
+      # temp fix for incorrect header (not half p's for 'half' covars included)
+      simRes = read.table(filename, sep=',', header=0, skip=1)
+      ncsInc = floor(ncs/2)
+      ncnotsInc = floor((nc-ncs)/2)
+      ncInc = ncsInc + ncnotsInc
+      colnames(simRes) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtReject")
+    }
+
   }
   else {
     # no results files yet for this param combination
@@ -36,10 +55,23 @@ simStats <- function(params) {
 
   for (seed in 2:10) {
 
-    filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "_", seed, ".txt")
+      filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "_", seed, ".txt")
 
     if (file.exists(filename)) {
+
+    if (covarsIncluded=="all") {
       simResPart = read.table(filename, sep=',', header=1)
+    }
+    else {
+      #	temp fix for incorrect header (not half	p's for	'half' covars included)
+      simResPart = read.table(filename, sep=',', header=0, skip=1)
+      ncsInc = floor(ncs/2)
+      ncnotsInc = floor((nc-ncs)/2)
+      ncInc = ncsInc + ncnotsInc
+      colnames(simResPart) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtReject")
+    }
+
+
       simRes = rbind(simRes, simResPart)
     }
 }

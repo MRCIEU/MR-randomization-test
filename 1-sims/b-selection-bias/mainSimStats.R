@@ -5,10 +5,13 @@
 
 params <- expand.grid(
 
-	rCovars=c(0,0.4,0.8),
-	rSelection=c(0.1, 0.2),
+	rCovars=c(-1,0,0.2,0.4,0.8),
+	rSelection=c(0.05, 0.1, 0.2),
 	ncNotS=c(2,10,50),
-	ncs=c(2,10,50)
+	ncs=c(2,10,50),
+	ivEffect=c(0.05, 0.1),
+	iv=c('grs'),
+	covarsIncluded=c('all', 'half')
 )
 
 
