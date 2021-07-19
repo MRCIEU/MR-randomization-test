@@ -73,7 +73,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
 
   for (i in 1:50) {
   
-    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded)
+    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed)
 
     cat(paste0(i, ",",paste(pvalue, collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   

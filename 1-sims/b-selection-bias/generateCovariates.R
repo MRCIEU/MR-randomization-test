@@ -12,7 +12,7 @@ generateCovariatesWithCorrelation <- function(n, nc, corr) {
 }
 
 
-generateCovariatesWithCorrelationDistribution <- function(n, nc, corr) {
+generateCovariatesWithCorrelationDistribution <- function(n, nc, corr, seed) {
 
   # normally distributed scenario
   if (corr==-1) {
@@ -31,17 +31,28 @@ generateCovariatesWithCorrelationDistribution <- function(n, nc, corr) {
     # this the result isn't symmetric about the descending diagonal
     corrCMat[lower.tri(corrCMat)]<-t(corrCMat)[lower.tri(corrCMat)]
 
+#    print(corrCMat)
+#    resDir=Sys.getenv('RES_DIR')
+#    filename=paste0(resDir, "/sims/corsim-out-", seed, ".txt")
+#    write.table(corrCMat, filename, sep=',', row.names=FALSE, col.names=TRUE)
+#    print('corr written to file')
+
     # get covariance matrix from correlation matrix (assume var=1 for covars)
     covC = cor2cov(corrCMat, 1)
 
     library(corpcor)
     if (!is.positive.definite(covC)) {
+        print('Making cov matrix positive definite')
         covC = make.positive.definite(covC)
+        print('done')
+        print(covC)
     }
 
     # generate covariates with this covariance
+    print('generating covars with particular covariance matrix')
     dfC = mvrnorm(n=n, mu=rep(0, nc), Sigma=covC, empirical=FALSE)
     dfC = as.data.frame(dfC)
+    print(dim(dfC))
     
     return(dfC)
 

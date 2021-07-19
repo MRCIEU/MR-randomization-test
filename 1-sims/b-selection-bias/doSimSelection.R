@@ -11,13 +11,22 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded, seed) {
 
  
   print('-------------------')
   print(paste0("Number of covariates that affect selection: ", ncs, " of ", nc))
   print(paste0("Correlation between covariates: ", corrC))
 
+
+
+# Fix because sometimes generating inv cov matrix gave error so dealing with this by trying to generate new data
+errorx=TRUE
+while (errorx==TRUE) {
+out <- tryCatch(
+	{
+
+  print('start trycatch')
 
   ##
   ## generate sim data
@@ -29,7 +38,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, c
   # number in sample
   n = 350000
   source('generateSimData.R')
-  simdata = generateSimData(n=n, nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv)
+  simdata = generateSimData(n=n, nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv, seed=seed)
 
 
   print(paste0('number of all covariates:', ncol(simdata$dfC)))
@@ -38,47 +47,73 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, c
     dfCs = simdata$dfC[,1:ncs, drop=FALSE]
     dfCnots = simdata$dfC[,(ncs+1):nc, drop=FALSE]
 
-    # half the number of covariates
-    dfCs = dfCs[,1:floor(ncs/2), drop=FALSE]
-    dfCnots = dfCnots[,1:floor((nc-ncs)/2), drop=FALSE]
+    # half the number of covariates are included in tests
+    ncsInc = floor(ncs/2)
+    ncnotsInc = floor((nc-ncs)/2)
+    ncInc = ncsInc + ncnotsInc
 
+    dfCs = dfCs[,1:ncsInc, drop=FALSE]
+    dfCnots = dfCnots[,1:ncnotsInc, drop=FALSE]
+
+    # combine covars back into data frame
     simdata$dfC = cbind(dfCs, dfCnots)
-    nc=ncol(simdata$dfC)
-    ncs=ncol(dfCs)
   }
+  else {
+    # all covars included in tests
+    ncInc = nc
+    ncsInc = ncs    
+  }
+
   print(paste0('number of covariates included in test:', ncol(simdata$dfC)))
   
+
+#  ncNOTs = nc - ncs
+#  resDir=Sys.getenv('RES_DIR')
+#  filename=paste0(resDir, "/sims/dfsim-out-", seed, ".txt")
+#  write.table(simdata$dfC, filename, sep=',', row.names=FALSE, col.names=TRUE)
+#  print('df written to file')
 
   ###
   ### calculate test statistic - Mahalanobis distance
 
   # computationally efficient to generate once rather than for each permutation
-  covDFC = solve(as.matrix(stats::cov(simdata$dfC)))
-  
-  t = as.numeric(getMD3CatsCorr(simdata$dfC, simdata$z, covDFC))
+  invCovDFC = solve(as.matrix(stats::cov(simdata$dfC)))
+  print('inv cov done')
 
+  errorx = FALSE
+
+},
+  error=function(cond) {
+    print('could not generate inverse covariance matrix from df so trying again')
+  }
+)
+}
+
+  print('trycatch finished')
+  
+  t = as.numeric(getMD3CatsCorr(simdata$dfC, simdata$z, invCovDFC))
 
 
   ###
   ### independent tests regressing X on Z
 
   individualPvalues = c()
-  for (i in 1:nc) {
+  for (i in 1:ncInc) {
 
     sumx = summary(lm(simdata$dfC[,i] ~ simdata$z))
 
     pvalue = sumx$coefficients['simdata$z','Pr(>|t|)']
-    print(paste0('i: ', pvalue, ', adjusted:', pvalue*nc))
+    print(paste0('i: ', pvalue, ', adjusted:', pvalue*ncInc))
 
     individualPvalues = c(individualPvalues, pvalue)
 
   }
 
-  bonfReject = (min(individualPvalues)*nc)<0.05
+  bonfReject = (min(individualPvalues)*ncInc)<0.05
 
 
   ## Reject using actual number of independent tests (from correlation)
-  numIndepTests = 1+(nc-1)*(1-corrC)
+  numIndepTests = 1+(ncInc-1)*(1-corrC)
   pThresh = 0.05/numIndepTests
   indtReject = min(individualPvalues)<pThresh
 
@@ -102,7 +137,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, c
     zperm = sample(simdata$z, length(simdata$z), replace=FALSE)
     
     # calculate test statistic on permuted data
-    testStatPerm = getMD3CatsCorr(simdata$dfC, zperm, covX.inv=covDFC)
+    testStatPerm = getMD3CatsCorr(simdata$dfC, zperm, covX.inv=invCovDFC)
     
     # add test stat of permutated data to our empirial distribution of test statistics
     permTestStats = c(permTestStats, testStatPerm)

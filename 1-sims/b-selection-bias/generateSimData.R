@@ -5,7 +5,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage") {
+generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage", seed=seed) {
 
   ###
   ### load packages
@@ -42,7 +42,7 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
     dfC = generateCovariatesWithCorrelation(n, nc, corrC)
   }
   else {
-    dfC = generateCovariatesWithCorrelationDistribution(n, nc, corrC)
+    dfC = generateCovariatesWithCorrelationDistribution(n, nc, corrC, seed=seed)
   }
 
   
