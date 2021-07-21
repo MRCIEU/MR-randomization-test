@@ -113,13 +113,27 @@ out <- tryCatch(
 
 
   ## Reject using actual number of independent tests (from correlation)
-  numIndepTests = 1+(ncInc-1)*(1-corrC)
-  pThresh = 0.05/numIndepTests
-  indtReject = min(individualPvalues)<pThresh
+
+
+  #numIndepTests = 1+(ncInc-1)*(1-corrC)
+  #pThresh = 0.05/numIndepTests
+  #indtReject = min(individualPvalues)<pThresh
 
   
 
+  source('numIndependentTests.R')
 
+  corrDFC = as.data.frame(cor(simdata$dfC))
+  indepTestNums = numIndependentTests(corrDFC)
+
+  print(paste0('indepMain: ', indepTestNums$indepMain))
+  print(paste0('indepLi: ', indepTestNums$indepLi))
+
+  pThreshIndMain = 0.05/indepTestNums$indepMain
+  indtRejectMain = min(individualPvalues)<pThreshIndMain
+
+  pThreshIndLi = 0.05/indepTestNums$indepLi
+  indtRejectLi = min(individualPvalues)<pThreshIndLi
 
 
   ###
@@ -159,7 +173,7 @@ out <- tryCatch(
   pvalue = length(which(permTestStats>=t))/nPerms
   print(paste0("Permutation P value: ", pvalue))
   
-  return(c(pvalue, individualPvalues, bonfReject, indtReject))
+  return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi))
 
 }
 
