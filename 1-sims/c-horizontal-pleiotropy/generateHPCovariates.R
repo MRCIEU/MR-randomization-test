@@ -1,0 +1,100 @@
+
+# generate covariates C with particular correlation corrC
+generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnps) {
+
+  
+  library('faux')
+
+
+  # init vars to contain the snps that are horizontally pleiotropic
+  vars = data.frame(z)
+  vars = vars[,1:numHPSnps, drop=FALSE]
+  print(head(vars))
+
+  # generate covariate one at a time
+  for (i in 1:nc) {
+
+    print(i)
+
+    # only the first ncHP covariates are affected by z
+    if (i<=ncHP) {
+      thisZCorr = zCorr
+    }
+    else {
+      thisZCorr = 0
+    }
+
+    covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),rep(corr, (ncol(vars)-1))), empirical=FALSE)
+    vars = cbind(vars,covar)
+    colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
+  
+    print(dim(vars))
+  }
+
+  # remove z from covariate data frame
+  vars = vars[,-1]
+
+  print(cor(vars))
+
+  return(vars)
+}
+
+
+generateHPCovarsWithCorrDistribution <- function(n, nc, ncHP, corr, seed, z, zCorr=0.001, numHPSnps) {
+
+  # normally distributed scenario
+  if (corr!=-1) {
+    return(NULL)
+  }
+  
+  
+  library('faux')
+
+  # init vars to contain the snps that are horizontally pleiotropic
+  vars = data.frame(z)
+  vars = vars[,1:numHPSnps]
+  
+  impossibleCorrs=TRUE
+  while(impossibleCorrs==TRUE) {
+  out <- tryCatch({
+    
+  # generate covariate one at a time
+  for (i in 1:nc) {
+
+    # only the first ncHP covariates are affected by z
+    if (i<=ncHP) {
+      thisZCorr = zCorr
+    }
+    else {
+      thisZCorr = 0
+    }
+    
+    corrCs = rnorm(i-1, 0, 0.1)
+    covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),corrCs), empirical=FALSE)
+    vars = cbind(vars,covar)
+    colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
+
+    print(dim(vars))
+      
+  }
+  
+  impossibleCorrs=FALSE
+      
+  },
+  error=function(cond) {
+    print('could not generate covariates from correlation, trying again.')
+  }
+  )
+  
+  
+        
+  }
+
+  # remove z from covariate data frame
+  vars = vars[,-1]
+
+  print(cor(vars))
+
+  return(vars)
+
+}
