@@ -9,6 +9,10 @@
 
 I use the following language versions: R-4.0.3.
 
+```bash
+module add languages/R-4.0.3-gcc9.1.0
+```
+
 The code uses some environment variables, which needs to be set in your linux environment. 
 
 The results and project data directories are temporarily set with:
