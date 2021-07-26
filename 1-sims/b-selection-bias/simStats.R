@@ -43,14 +43,14 @@ simStats <- function(params) {
       ncsInc = floor(ncs/2)
       ncnotsInc = floor((nc-ncs)/2)
       ncInc = ncsInc + ncnotsInc
-      colnames(simRes) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtReject")
+      colnames(simRes) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtRejectMain","indtRejectLi")
     }
 
   }
   else {
     # no results files yet for this param combination
     print("NO RESULTS FOR THIS PARAM COMBINATION")
-    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA))
+    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA, powerIndLi=NA, mcseIndLi=NA))
   }
 
   for (seed in 2:10) {
@@ -68,7 +68,7 @@ simStats <- function(params) {
       ncsInc = floor(ncs/2)
       ncnotsInc = floor((nc-ncs)/2)
       ncInc = ncsInc + ncnotsInc
-      colnames(simResPart) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtReject")
+      colnames(simResPart) = c("i","p",paste0('p', 1:ncInc),"bonf_reject","indtRejectMain", "indtRejectLi")
     }
 
 
@@ -102,15 +102,24 @@ simStats <- function(params) {
   ### calculate power and MCSE for number of independent tests correction
 
   # calculated power/mcse
-  numIndepReject = length(which(simRes$indtReject == 1))
+  numIndepReject = length(which(simRes$indtRejectMain == 1))
   powerIndep = numIndepReject/numRes
 
   mcseIndep = (powerIndep*(1-powerIndep)/numRes)^0.5
 
 
+  # calculated power/mcse
+  numIndepRejectLi = length(which(simRes$indtRejectLi == 1))
+  powerIndepLi = numIndepRejectLi/numRes
+
+  mcseIndepLi = (powerIndepLi*(1-powerIndepLi)/numRes)^0.5
 
 
-  return(list(numRes=numRes, powerBranson=powerBranson, mcseBranson=mcseBranson, powerBon=powerBon, mcseBon=mcseBon, powerInd=powerIndep, mcseInd=mcseIndep))
+
+
+
+
+  return(list(numRes=numRes, powerBranson=powerBranson, mcseBranson=mcseBranson, powerBon=powerBon, mcseBon=mcseBon, powerInd=powerIndep, mcseInd=mcseIndep, powerIndLi=powerIndepLi, mcseIndLi=mcseIndepLi))
 
 }
 

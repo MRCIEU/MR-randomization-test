@@ -3,8 +3,8 @@ resDir=getenv('RES_DIR');
 
 
 % basic graph options
-colorx = {'[0.8 0.2 0.2]';'blue';'green'};
-facecolorx = {'white';'white';'white'};
+colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]'};
+facecolorx = {'white';'white';'white';'white'};
 markerEdgecolorx = {'[0.8 0.2 0.2]';'[0.4 0.0 0.0]';'[0.4 0.0 0.2]'; '[1.0 0.5 0.5]'; '[0.1 0.1 0.6]'; '[0.5 0.8 0.0]'; 'magenta';'cyan'};
 markersx = {'s';'^';'o';'v';'d'};
 markersizex = 11;
@@ -83,6 +83,15 @@ for i=1:length(all_ncNOTs)
 
 		hxInd(j) = h1;
 
+		% number of independent tests based on correlation
+                posx = posx+0.02;
+                lower=allx.powerIndLi(ix) - 1.96*allx.mcseIndLi(ix);
+                upper=allx.powerIndLi(ix) + 1.96*allx.mcseIndLi(ix);
+                hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{4}, 'linewidth', 3);
+                hold on; h1=plot(posx, allx.powerIndLi(ix), markersx{j}, 'MarkerFaceColor', facecolorx{4}, 'MarkerEdgeColor', colorx{4}, 'MarkerSize', markersizex);
+
+                hxIndLi(j) = h1;
+
 	end
 end
 
@@ -91,11 +100,12 @@ labelx = all_ncNOTs;
 set(gca,'XTickLabel', labelx);
 set(gca,'XTick', [1.1;2.1;3.1]);
 
+
 set(gcf, 'unit', 'inches');
 figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon,hxInd], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';},'Location','NorthEastOutside');
+lx=legend([hxBran,hxBon,hxInd,hxIndLi], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=0.8';'Indep (Li) corr=normal';},'Location','NorthEastOutside');
 
 lx.FontSize = 12;
 
