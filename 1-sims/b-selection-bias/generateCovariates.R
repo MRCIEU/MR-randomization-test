@@ -2,6 +2,8 @@
 # generate covariates C with particular correlation corrC
 generateCovariatesWithCorrelation <- function(n, nc, corr) {
 
+  source('../generic-functions/cor2cov.R')
+
   corrCMat = diag(nc)
   corrCMat[which(corrCMat == 0)] = corr
   covC = cor2cov(corrCMat, 1)
@@ -13,6 +15,8 @@ generateCovariatesWithCorrelation <- function(n, nc, corr) {
 
 
 generateCovariatesWithCorrelationDistribution <- function(n, nc, corr, seed) {
+
+  source('../generic-functions/cor2cov.R')
 
   # normally distributed scenario
   if (corr==-1) {

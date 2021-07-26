@@ -13,12 +13,13 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   # use MASS for mvrnorm and polyr functions
   library('MASS')
 
-  source('generateContinuousY2.R')
+  source('../generic-functions/generateContinuousY2.R')
   source('generateContinuousX2.R')
-  source('combineDeterminants.R')
-  source('combineDeterminants2.R')
+  source('../generic-functions/combineDeterminants.R')
+  source('../generic-functions/combineDeterminants2.R')
   source('generateBinaryS.R')
   source('generateCovariates.R')
+  source('../generic-functions/generateIV.R')
 
   ## z is a snp dosage IV with 3 levels
   ## x is a binary exposure
@@ -36,8 +37,14 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   
 
   ###
-  ### generate data
+  ### generate IV z
+
+  z = generateIV(ivType, n, numSnps)
   
+
+  ###
+  ### generate covariates with specific correlation
+
   if (corrC>=0) {
     dfC = generateCovariatesWithCorrelation(n, nc, corrC)
   }
@@ -46,19 +53,6 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   }
 
   
-  ## generate a IV with 3 categories
-  ## use p(A1)=0.8, p(A2)=0.2, dosage probs assuming HWE = (0.8^2, 2*0.8*0.2, 0.2^2) = (0.64,0.32,0.04) 
-  if(ivType=="dosage") {
-    print('generate dosage IV')
-    z = sample(1:3, n, replace=TRUE, prob=c(0.64, 0.32, 0.04))
-  } else if (ivType=="grs") {
-    print('generate grs IV')
-    z = rnorm(n)
-  }  
-  else {
-    stop("ivType not grs or dosage")
-  }
-
 
   ###
   ### calculate effects of covariates on X and Y, fixing the total effect of C_s and C_nots respectively.
@@ -102,8 +96,4 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   
 }
 
-
-cor2cov <- function(R, S) {
- sweep(sweep(R, 1, S, "*"), 2, S, "*")
- }
 

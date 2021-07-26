@@ -13,11 +13,12 @@
 # corrC: correlation between covariates
 doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded, seed) {
 
- 
+  source('../generic-functions/getMahalanobisDist.R')
+  source('doRandomizationTest.R')
+
   print('-------------------')
   print(paste0("Number of covariates that affect selection: ", ncs, " of ", nc))
   print(paste0("Correlation between covariates: ", corrC))
-
 
 
 # Fix because sometimes generating inv cov matrix gave error so dealing with this by trying to generate new data
@@ -90,125 +91,12 @@ out <- tryCatch(
 }
 
   print('trycatch finished')
-  
-  t = as.numeric(getMD3CatsCorr(simdata$dfC, simdata$z, invCovDFC))
 
-
-  ###
-  ### independent tests regressing X on Z
-
-  individualPvalues = c()
-  for (i in 1:ncInc) {
-
-    sumx = summary(lm(simdata$dfC[,i] ~ simdata$z))
-
-    pvalue = sumx$coefficients['simdata$z','Pr(>|t|)']
-    print(paste0('i: ', pvalue, ', adjusted:', pvalue*ncInc))
-
-    individualPvalues = c(individualPvalues, pvalue)
-
-  }
-
-  bonfReject = (min(individualPvalues)*ncInc)<0.05
-
-
-  ## Reject using actual number of independent tests (from correlation)
-
-
-  #numIndepTests = 1+(ncInc-1)*(1-corrC)
-  #pThresh = 0.05/numIndepTests
-  #indtReject = min(individualPvalues)<pThresh
 
   
+  results = doRandomizationTest(simdata$dfC, simdata$z, invCovDFC)
 
-  source('numIndependentTests.R')
-
-  corrDFC = as.data.frame(cor(simdata$dfC))
-  indepTestNums = numIndependentTests(corrDFC)
-
-  print(paste0('indepMain: ', indepTestNums$indepMain))
-  print(paste0('indepLi: ', indepTestNums$indepLi))
-
-  pThreshIndMain = 0.05/indepTestNums$indepMain
-  indtRejectMain = min(individualPvalues)<pThreshIndMain
-
-  pThreshIndLi = 0.05/indepTestNums$indepLi
-  indtRejectLi = min(individualPvalues)<pThreshIndLi
-
-
-  ###
-  ### permutation testing
-
-  print('### Permutation testing ###')
-  
-  # distribution of test statistics generated under the null of complete randomization
-  permTestStats = c()
-  nPerms = 5000
-
-  for (i in 1:nPerms) {
-    
-    # randomly permute z
-    zperm = sample(simdata$z, length(simdata$z), replace=FALSE)
-    
-    # calculate test statistic on permuted data
-    testStatPerm = getMD3CatsCorr(simdata$dfC, zperm, covX.inv=invCovDFC)
-    
-    # add test stat of permutated data to our empirial distribution of test statistics
-    permTestStats = c(permTestStats, testStatPerm)
-
-    if (i%%100==0) print(i)
-
-  }
-  
-  
-  ###
-  ### summarise permutation testing null distribution of test statistics
-  
-  print(paste0('True test statistic: ', t))
-  
-  print('Summary of null distribution of test statistics (generated with permutation testing):')
-  summary(permTestStats)
-  
-  # generate p value
-  pvalue = length(which(permTestStats>=t))/nPerms
-  print(paste0("Permutation P value: ", pvalue))
-  
-  return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi))
-
-}
-
-getMD3Cats <- function(covars, z, covX.inv) {
-
-	# mean difference across three ordinal categories - treat as continuous
-	meanDiffs = rep(NA,ncol(covars))
-	for (i in 1: ncol(covars)) {
-		covar = covars[,i]
-		fit = lm(z ~ covar)
-		sumx = summary(fit)
-		beta = sumx$coefficients["covar","Estimate"]
-		meanDiffs[i] = beta
-	}
-
-	md = t(meanDiffs) %*% covX.inv %*% meanDiffs
-
-	return(md)
-
-}
-
-
-getMD3CatsCorr <- function(covars, z, covX.inv) {
-
-	# mean difference across three ordinal categories - treat as continuous
-	meanDiffs = rep(NA,ncol(covars))
-	for (i in 1: ncol(covars)) {
-		covar = covars[,i]
-
-		meanDiffs[i] = cor(z, covar)*(sd(covar)/sd(z))
-	}
-
-	md = t(meanDiffs) %*% covX.inv %*% meanDiffs
-
-	return(md)
+  return(results)
 
 }
 
