@@ -99,17 +99,25 @@ doHPRandomizationTest <- function(dfC, z, invCovDFC) {
     if (i%%100==0) print(i)
 
   }
-  
+
   print('d')
+
+  permTestStatsAll = apply(permTestStats, 1, sum)
+  
+  print('e')
   
   ###
   ### summarise permutation testing null distribution of test statistics
   
-  print(paste0('True test statistic: ', t))
+  print(paste0('True test statistic: ', tZall))
   
+  print('f')
+
   print('Summary of null distribution of test statistics (generated with permutation testing):')
   summary(permTestStats)
   
+  print('g')
+
   pvaluesMDZ = c()
   for (i in 1:numZ) {
 
@@ -118,12 +126,14 @@ doHPRandomizationTest <- function(dfC, z, invCovDFC) {
    pvaluesMDZ = c(pvaluesMDZ, thisZp)
   }
 
+  print('h')
 
   # generate overall p value
-  pvalue = length(which(permTestStats>=t))/(numZ*nPerms)
+  pvalue = length(which(permTestStatsAll>=tZall))/(nPerms)
   print(paste0("Permutation P value: ", pvalue))
 
-  
+  print('i')
+
   return(list(pvalueMD=pvalue, pvalueMDz = pvaluesMDZ, individualPvalues = individualPvalues, bonfRejectAll=bonfRejectAll, bonfRejectPerZ=bonfRejectPerZ, indtRejectMainAll=indtRejectMainAll, indtRejectLiAll=indtRejectLiAll, indtRejectMainPerZ=indtRejectMainPerZ, indtRejectLiPerZ=indtRejectLiPerZ))
 
 
