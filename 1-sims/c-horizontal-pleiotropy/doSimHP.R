@@ -87,6 +87,7 @@ out <- tryCatch(
 },
   error=function(cond) {
     print('could not generate inverse covariance matrix from df so trying again')
+    print(cond)
   }
 )
 }

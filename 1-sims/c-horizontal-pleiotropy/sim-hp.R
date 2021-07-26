@@ -75,13 +75,19 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsInc
 
   filename=paste0("/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".txt")
 
-  cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi'), file=paste0(resDir, filename), sep="\n", append=FALSE)
-
   for (i in 1:50) {
   
-    pvalue = doSimHP(nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, seed=seed)
+    results = doSimHP(nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, seed=seed)
 
-    cat(paste0(i, ",",paste(pvalue, collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
+    # results: pvalueMD pvalueMDz, individualPvalues, bonfRejectAll, bonfRejectPerZ, indtRejectMainAll, indtRejectLiAll, indtRejectMainPerZ,indtRejectLiPerZ
+
+    # first time print header row using names in results
+    if (i==1) {
+      headernames = names(unlist(results))
+      cat(paste0("i,", paste0(names(unlist(results)), collapse=',')), file=paste0(resDir, filename), sep="\n", append=FALSE)
+    }
+    
+    cat(paste0(i, ",",paste(unlist(results), collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   
   }
 

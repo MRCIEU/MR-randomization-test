@@ -7,9 +7,8 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
 
 
   # init vars to contain the snps that are horizontally pleiotropic
-  vars = data.frame(z)
-  vars = vars[,1:numHPSnps, drop=FALSE]
-  print(head(vars))
+  vars = data.frame(z[,1:numHPSnps])
+  #print(head(vars))
 
   # generate covariate one at a time
   for (i in 1:nc) {
@@ -31,10 +30,13 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
     print(dim(vars))
   }
 
-  # remove z from covariate data frame
-  vars = vars[,-1]
+  #print(head(vars))
 
-  print(cor(vars))
+  # remove z from covariate data frame
+  vars = vars[,-(1:numHPSnps)]
+
+  #print(cor(vars))
+  #print(head(vars))
 
   return(vars)
 }
