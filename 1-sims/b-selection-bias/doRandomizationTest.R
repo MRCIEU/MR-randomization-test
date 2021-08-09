@@ -36,7 +36,7 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
 
   
 
-  source('../generic-functions/numIndependentTests.R')
+#  source('../generic-functions/numIndependentTests.R')
 
   ## gen equivalent number of independent tests across all the covariates
   corrDFC = as.data.frame(cor(dfC))

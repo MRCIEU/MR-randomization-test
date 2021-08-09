@@ -15,6 +15,7 @@ doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, c
 
   source('../generic-functions/getMahalanobisDist.R')
   source('doRandomizationTest.R')
+  source('../generic-functions/numIndependentTests.R')
 
   print('-------------------')
   print(paste0("Number of covariates that affect selection: ", ncs, " of ", nc))
