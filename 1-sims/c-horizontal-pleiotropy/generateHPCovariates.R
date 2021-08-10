@@ -23,7 +23,11 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
       thisZCorr = 0
     }
 
-    covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),rep(corr, (ncol(vars)-1))), empirical=FALSE)
+    # generate next covariate with particular correlation with vars 
+    # i.e. the HP snps and the already generated covariates
+    covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),rep(corr, (i-1))), empirical=FALSE)
+
+    # add new covar to covars
     vars = cbind(vars,covar)
     colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
   
@@ -71,8 +75,13 @@ generateHPCovarsWithCorrDistribution <- function(n, nc, ncHP, corr, seed, z, zCo
       thisZCorr = 0
     }
     
+    # generate next covariate with particular correlation with vars 
+    # i.e. the HP snps and the already generated covariates
+    # correlation with covars comes from a normal distribution
     corrCs = rnorm(i-1, 0, 0.1)
     covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),corrCs), empirical=FALSE)
+
+    # add new covar to covars
     vars = cbind(vars,covar)
     colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
 
