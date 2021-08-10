@@ -30,14 +30,14 @@ generateContinuousX2_HP <- function(dfC, z, ncHP, numHPSnps, ivRsq=0.1) {
 
 
     if (numHPSnps<ncol(z)) {
-    ## generate intermediate variable for nonHP SNPs (at indexes (numHPSnps+1):ncol(z) in z)
-    tmpZ = rowSums(z[,(numHPSnps+1):ncol(z), drop=FALSE])
+      ## generate intermediate variable for nonHP SNPs (at indexes (numHPSnps+1):ncol(z) in z)
+      tmpZ = rowSums(z[,(numHPSnps+1):ncol(z), drop=FALSE])
 
-    ## continuous exposure X
-    x = combineDeterminants2(covars=data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS), otherdet=tmpZ, varExplOtherDet=ivRsq, varExplCovars=0.1)
+      ## continuous exposure X
+      x = combineDeterminants2(covars=data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS), otherdet=tmpZ, varExplOtherDet=ivRsq, varExplCovars=0.1)
     }
     else {
-
+       # no non-HP snps so determinants of X are only C_hp and C_nothp, so they contribut equally to X, with total r2=0.1
        x = combineDeterminants3(tmpCS, tmpCNOTS, 0.05, 0.05)
     }
 
