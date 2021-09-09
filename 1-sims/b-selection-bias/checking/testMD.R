@@ -8,8 +8,7 @@ resDir=Sys.getenv('RES_DIR')
 library('ivmodel')
 library('MASS')
 
-source('../doSimSelection.R')
-source('getMDTest.R')
+source('../../generic-functions/getMahalanobisDist.R')
 
 n=10000
 nc=10
@@ -27,7 +26,7 @@ for (corrC in seq(0,0.9, by=0.1)) {
   covinvDFC = solve(as.matrix(stats::cov(dfC)))
 
   outfile = paste0(resDir, '/sims/mdtest', corrC, '.csv')
-  cat('mymd,mymd2,md,mymdcor\n', file=outfile, append=FALSE)
+  cat('mymd,md,mymdcor\n', file=outfile, append=FALSE)
 
   for (i in 1:200) {
 
@@ -43,7 +42,6 @@ for (corrC in seq(0,0.9, by=0.1)) {
     print(paste0('regression: ', diffT))
 
     md = getMD(dfC, zperm, covinvDFC)
-    myMD2 = getMDTest(dfC, zperm, covinvDFC)
 
     time1 <- Sys.time()
     myMD3Cor = getMD3CatsCorr(dfC, zperm, covinvDFC)
@@ -52,7 +50,7 @@ for (corrC in seq(0,0.9, by=0.1)) {
     print(paste0('cor: ', diffT))
 
     # save mds to file
-    cat(paste0(myMD, ',', myMD2, ',', md, ',', myMD3Cor, '\n'), file=outfile, append=TRUE)
+    cat(paste0(myMD, ',', md, ',', myMD3Cor, '\n'), file=outfile, append=TRUE)
 
   }
 
