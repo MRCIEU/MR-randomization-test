@@ -6,7 +6,9 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
 
   ## generate MD stat for this dfC and z combination  
   t = as.numeric(getMD3CatsCorr(dfC, z, invCovDFC))
+  print(t)
 
+  rsq = max(abs(cor(dfC, z, use = "pairwise.complete.obs")))
 
   ###
   ### independent tests regressing X on Z
@@ -62,6 +64,7 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
   
   # distribution of test statistics generated under the null of complete randomization
   permTestStats = c()
+  permTestStatsRsq = c()
   nPerms = 5000
 
   for (i in 1:nPerms) {
@@ -74,6 +77,11 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
     
     # add test stat of permutated data to our empirial distribution of test statistics
     permTestStats = c(permTestStats, testStatPerm)
+
+
+    rsqPerm = max(abs(cor(dfC, zperm, use = "pairwise.complete.obs")))
+    permTestStatsRsq = c(permTestStatsRsq, rsqPerm)
+
 
     if (i%%100==0) print(i)
 
@@ -91,8 +99,18 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
   # generate p value
   pvalue = length(which(permTestStats>=t))/nPerms
   print(paste0("Permutation P value: ", pvalue))
+
+
+  # generate rsq permutation p value
+  print(paste0("max absolute RSQ: ", rsq))
+  pvalueRsq = length(which(permTestStatsRsq>=rsq))/nPerms
+  print(paste0("RSQ permutation p value:", pvalueRsq))
+
+#  write.table(permTestStatsRsq, 'testRSQ.txt', sep=',', col.names=FALSE)
+#  write.table(permTestStats, 'testMD.txt', sep=',',	col.names=FALSE) 
+
   
-  return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi))
+  return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi, pvalueRsq))
 
 }
 

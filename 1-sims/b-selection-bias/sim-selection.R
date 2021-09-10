@@ -70,11 +70,11 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
   filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".txt")
 
   if (covarsIncluded == "all") {
-    cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi'), file=paste0(resDir, filename), sep="\n", append=FALSE)
+    cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi,pRsq'), file=paste0(resDir, filename), sep="\n", append=FALSE)
   }
   else {
     ncInc = floor(ncs/2) + floor(ncNOTs/2)
-    cat(paste0("i,p,", paste(paste0('p', 1:ncInc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi'), file=paste0(resDir, filename), sep="\n", append=FALSE)
+    cat(paste0("i,p,", paste(paste0('p', 1:ncInc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi,pRsq'), file=paste0(resDir, filename), sep="\n", append=FALSE)
   }
 
   for (i in 1:50) {
