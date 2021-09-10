@@ -11,7 +11,8 @@ params <- expand.grid(
 	ncs=c(2,10,50),
 	ivEffect=c(0.05, 0.1),
 	iv=c('grs'),
-	covarsIncluded=c('all', 'half')
+	covarsIncluded=c('all', 'half'),
+	allParticipants=c(NA)
 )
 
 
@@ -24,17 +25,18 @@ params2 <- expand.grid(
         ncs=c(2),
         ivEffect=c(0.05, 0.1),
         iv=c('grs'),
-        covarsIncluded=c('all')
+        covarsIncluded=c('all'),
+	allParticipants=c(NA)
 )
 
 params = rbind(params, params2)
-
 
 
 ##
 ## get simulation results for each permutation of parameters
 
 source('simStats.R')
+source('loadResultsData.R')
 
 resDir=Sys.getenv('RES_DIR')
 resFile = paste0(resDir, '/sims/sim-res.csv')
@@ -45,7 +47,8 @@ cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBr
 # generate summary stat for each param combination and save results to file
 for (i in 1:nrow(params)) {
 
-	res = simStats(params[i,])
+	simRes = loadResultsData(params[i,])
+	res = simStats(simRes)
 
 	# write result to file
 	resLine = cbind(params[i,], data.frame(res))	

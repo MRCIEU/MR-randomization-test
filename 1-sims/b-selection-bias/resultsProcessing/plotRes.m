@@ -1,11 +1,14 @@
 
+
+% resFileName is a parameter for this set of results
+resFileName
+
 resDir=getenv('RES_DIR');
 
 
 % basic graph options
-colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]'};
-facecolorx = {'white';'white';'white';'white'};
-markerEdgecolorx = {'[0.8 0.2 0.2]';'[0.4 0.0 0.0]';'[0.4 0.0 0.2]'; '[1.0 0.5 0.5]'; '[0.1 0.1 0.6]'; '[0.5 0.8 0.0]'; 'magenta';'cyan'};
+colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]';'[0.9 0.85 0.2]'};
+facecolorx = {'white';'white';'white';'white';'white'};
 markersx = {'s';'^';'o';'v';'d'};
 markersizex = 11;
 
@@ -13,7 +16,7 @@ markersizex = 11;
 %%%%
 %%%% 10 covariates affect selection
 
-allx = dataset('file', strcat(resDir, '/sims/sim-res.csv'), 'delimiter', ',');
+allx = dataset('file', strcat(resDir, '/sims/', resFileName, '.csv'), 'delimiter', ',');
 
 % convert to numeric (needed because when not all sim results are there then NaN'a mean the columns are strings)
 %allx.powerBranson = str2double(allx.powerBranson);
@@ -57,6 +60,9 @@ for i=1:length(all_ncNOTs)
 
 		ix = find(allx.ncs==ncs & allx.ncNotS == ncNOTs & allx.rCovars ==rCovars & allx.rSelection == rSel & allx.ivEffect == ivEffect & allx.covarsIncluded == covarsIncluded);
 
+		length(ix)
+		if (length(ix)>0)
+
 		% branson
 		lower=allx.powerBranson(ix) - 1.96*allx.mcseBranson(ix);
 		upper=allx.powerBranson(ix) + 1.96*allx.mcseBranson(ix);
@@ -92,6 +98,18 @@ for i=1:length(all_ncNOTs)
 
                 hxIndLi(j) = h1;
 
+
+		% number of independent tests based on correlation
+                posx = posx+0.02;
+                lower=allx.powerRsq(ix) - 1.96*allx.mcseRsq(ix);
+                upper=allx.powerRsq(ix) + 1.96*allx.mcseRsq(ix);
+                hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{5}, 'linewidth', 3);
+                hold on; h1=plot(posx, allx.powerRsq(ix), markersx{j}, 'MarkerFaceColor', facecolorx{5}, 'MarkerEdgeColor', colorx{5}, 'MarkerSize', markersizex);
+
+                hxRsq(j) = h1;
+
+		end
+
 	end
 end
 
@@ -105,7 +123,7 @@ set(gcf, 'unit', 'inches');
 figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon,hxInd,hxIndLi], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=0.8';'Indep (Li) corr=normal';},'Location','NorthEastOutside');
+lx=legend([hxBran,hxBon,hxInd,hxIndLi,hxRsq], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=0.8';'Indep (Li) corr=normal';'Rsq corr=0';'Rsq corr=0.2';'Rsq corr=0.4';'Rsq corr=0.8';'Rsq corr=normal';},'Location','NorthEastOutside');
 
 lx.FontSize = 12;
 
@@ -126,7 +144,7 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-filename=strcat(resDir, '/sims/fig-sim-selection-',num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
+filename=strcat(resDir, '/sims/fig-sim-selection-',resFileName,num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
 saveas(h, filename);
 
 
