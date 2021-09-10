@@ -13,7 +13,7 @@ params <- expand.grid(
         ncs=c(2),
         ivEffect=c(0.05),
         iv=c('grs'),
-        covarsIncluded=c('all'),
+        covarsIncluded=c('all', 'half'),
         allParticipants=c(1)
 )
 
