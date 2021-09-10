@@ -27,9 +27,8 @@ getMD3CatsCorr <- function(covars, z, covX.inv) {
 	for (i in 1: ncol(covars)) {
 		covar = covars[,i]
 
-		meanDiffs[i] = cor(z, covar)*(sd(covar)/sd(z))
+		meanDiffs[i] = cor(z, covar, use = "pairwise.complete.obs")*(sd(covar, na.rm=TRUE)/sd(z, na.rm=TRUE))
 	}
-
 	md = t(meanDiffs) %*% covX.inv %*% meanDiffs
 
 	return(md)
