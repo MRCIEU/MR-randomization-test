@@ -41,7 +41,7 @@ if (covarSet == "agesex") {
 
 
 # get inverse covariance matrix used for randomization test
-invCovDFC = solve(as.matrix(stats::cov(covars)))
+invCovDFC = solve(as.matrix(stats::cov(covars, use="pairwise.complete.obs")))
 
 
 ## run randomization test
