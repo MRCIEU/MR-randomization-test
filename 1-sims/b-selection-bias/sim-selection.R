@@ -30,6 +30,11 @@ iv=args[6]
 # half: generate the data as normal but only include half the covariates that affect and dont affect selection in the tested covariates set
 covarsIncluded = args[7]
 
+# allSample is boolean denoting whether to run in whole sample instead, to check no bias i.e. p~0.05 from Branson approach
+allSample = as.numeric(args[8])
+if (is.null(allSample) | is.na(allSample)) {
+  allSample = 0
+}
 
 
 # set default settings
@@ -54,21 +59,29 @@ print(paste0("Total effect of covariates and X on selection (r2): ", totalEffect
 print(paste0("Effect of IV on X (r2):", ivEffect))
 print(paste0("IV type (either 'dosage' or 'grs'):", iv))
 print(paste0("Covariates included in tested covariate set:", covarsIncluded))
+print(paste0("Run in whole sample rather than selected subsample:", allSample))
 print('-------------------')
 
 
 library(parallel)
 cl <- makeCluster(10)
 clusterSetRNGStream(cl, iseed = 42)
-y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv, ivEffect, covarsIncluded, resDir) {
+y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv, ivEffect, covarsIncluded, resDir, allSample) {
+
+  # reset file storing poisson parameters
+  filename=paste0("/sims/sim-out-poisson-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
+  cat("", file=paste0(resDir, filename), sep="\n", append=FALSE)
 
 
-  sink(paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".log"))
+  # start logging
+  sink(paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "-", allSample, "_", seed, ".log"))
 
   source('doSimSelection.R')
 
-  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".txt")
+  # results file
+  filename=paste0("/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
 
+  # add header to results file
   if (covarsIncluded == "all") {
     cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi,pRsq'), file=paste0(resDir, filename), sep="\n", append=FALSE)
   }
@@ -79,7 +92,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
 
   for (i in 1:50) {
   
-    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed)
+    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed, all=allSample, resDir=resDir)
 
     cat(paste0(i, ",",paste(pvalue, collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   
@@ -87,7 +100,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
 
   sink()
 
-}, nc=nc, ncs=ncs, corrC=corrC, ncNOTs=ncNOTs, totalEffect=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, resDir=resDir)
+}, nc=nc, ncs=ncs, corrC=corrC, ncNOTs=ncNOTs, totalEffect=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, resDir=resDir, allSample=allSample)
 stopCluster(cl)
 
 

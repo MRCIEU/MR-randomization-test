@@ -5,7 +5,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage", seed=seed) {
+generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage", all=FALSE, covarsIncluded=covarsIncluded, seed, resDir) {
 
   ###
   ### load packages
@@ -82,15 +82,21 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   s = dataS$s
 
 
+
+
   ##
   ##  combine into a dataframe
 
 
   ###
   ### select subsample
-  
-  simdata = list(x = x[which(s == 1)], y = y[which(s == 1)], z = z[which(s == 1)], dfC=dfC[which(s==1),])
-  
+
+  if (all == TRUE) {
+    simdata = list(x=x, y=y, z=z, dfC=dfC, s=s)
+  }
+  else {
+    simdata = list(x = x[which(s == 1)], y = y[which(s == 1)], z = z[which(s == 1)], dfC=dfC[which(s==1),])
+  }
 
   return(simdata)
   
