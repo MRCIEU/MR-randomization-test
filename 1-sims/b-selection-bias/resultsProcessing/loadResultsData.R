@@ -22,7 +22,7 @@ loadResultsData <- function(params) {
   print(paste0("Total effect of covariates on selection: ", totalEffect))
   print(paste0("Effect of IV on X: ", ivEffect))
   
-  print('-------------------')
+  print('-------------')
 
 
   ###
@@ -48,7 +48,7 @@ loadResultsData <- function(params) {
   else {
     # no results files yet for this param combination
     print("NO RESULTS FOR THIS PARAM COMBINATION")
-    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA, powerIndLi=NA, mcseIndLi=NA))
+    return(NULL)
   }
 
   for (seed in 2:10) {

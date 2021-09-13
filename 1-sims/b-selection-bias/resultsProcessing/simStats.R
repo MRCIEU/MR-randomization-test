@@ -3,6 +3,10 @@
 
 simStats <- function(simRes) {
 
+  if (is.null(simRes)) {
+    return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA, powerIndLi=NA, mcseIndLi=NA, powerRsq=NA, mcseRsq=NA))
+  }
+
   numRes = nrow(simRes)
 
   ###
