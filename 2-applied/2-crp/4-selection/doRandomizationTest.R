@@ -17,7 +17,7 @@ sink(paste0(resDir, '/crp-selection-',covarSet,'.log'))
 
 ## get covars
 
-covars = read.table(paste0(dataDir, '/phenotypes/derived/phenos.csv'), header=1, sep=',')
+covars = read.table(paste0(dataDir, '/phenotypes/derived/phenos-selection.csv'), header=1, sep=',')
 
 ## get IV - CRP GRS
 
@@ -34,7 +34,7 @@ z = alldata[,"crp_grs"]
 if (covarSet == "agesex") {
   covars = alldata[,c("age", "male")]
 } else if (covarSet == "all") {
-  covars = alldata[,c("age", "male","smoke","neurot_score","hasDepression","ed1college","ed2alevels","ed3gcse","ed4cse","ed5nvq","ed6other_profes")]
+  covars = alldata[,c("age", "male","smoke","neurot_score","hasDepression","eduyears", "townsend")]
 } else {
   stop(paste0("covarSet arg not valid: ", covarSet))
 }
