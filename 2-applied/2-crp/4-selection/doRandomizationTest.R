@@ -46,9 +46,17 @@ invCovDFC = solve(as.matrix(stats::cov(covars, use="pairwise.complete.obs")))
 
 ## run randomization test
 
+print("CRP GRS")
 results = doRandomizationTest(covars, z, invCovDFC)
-
 print(results)
+
+
+
+zSNP = alldata[,"rs2794520"]
+print("CRP CIS SNP rs2794520")
+results = doRandomizationTest(covars, zSNP, invCovDFC)
+print(results)
+
 
 sink()
 
