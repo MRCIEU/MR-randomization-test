@@ -21,3 +21,10 @@ mental health traits (neuroticism and depression).
 j-crp-testall.sh
 ```
 
+
+## Get equivalent number of independent phenotypes
+
+
+```bash
+Rscript numIndep.R
+```
