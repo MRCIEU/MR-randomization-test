@@ -8,7 +8,7 @@
 Covariates: Age and sex only
 
 ```bash
-Rscript doRandomizationTest.R "agesex"
+qsub j-crp-testagesex.sh
 ```
 
 # Lenient set
@@ -18,6 +18,6 @@ mental health traits (neuroticism and depression).
 
 
 ```bash
-Rscript doRandomizationTest.R "all"
+j-crp-testall.sh
 ```
 
