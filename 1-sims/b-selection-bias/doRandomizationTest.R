@@ -110,7 +110,8 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
 #  write.table(permTestStats, 'testMD.txt', sep=',',	col.names=FALSE) 
 
   
-  return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi, pvalueRsq))
+  #return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi, pvalueRsq))
+  return(list(pvalue=pvalue, individualPvalues=individualPvalues, bonfReject=bonfReject, indtRejectMain=indtRejectMain, indtRejectLi=indtRejectLi, pvalueRsq=pvalueRsq))
 
 }
 

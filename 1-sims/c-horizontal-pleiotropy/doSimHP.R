@@ -21,7 +21,7 @@ doSimHP <- function(nc, ncHP, corrC, iv, ivEffect, covarsIncluded, numSnps, numH
 
 
   source('../generic-functions/getMahalanobisDist.R')
-  source('doHPRandomizationTest.R') 
+  source('../b-selection-bias/doRandomizationTest.R')  
   source('../generic-functions/numIndependentTests.R')
 
   print('-------------------')
@@ -93,11 +93,19 @@ out <- tryCatch(
 }
 
   print('trycatch finished')
-  
 
+  # get 1 random hp snp and 1 random non hp snp  
+  mdSNPHPIdx = runif(1, 1, numHPSnps)
+  mdSNPnonHPIdx = runif(1, (numHPSnps+1), numSnps)
+  snpHP = simdata$z[,mdSNPHPIdx]
+  snpNotHP = simdata$z[,mdSNPnonHPIdx]
 
-  results = doHPRandomizationTest(simdata$dfC, simdata$z, invCovDFC)
-   
+  # run randomization test on the two randomly selected snps
+  resultsHP = doRandomizationTest(simdata$dfC, snpHP, invCovDFC)
+  resultsNotHP = doRandomizationTest(simdata$dfC, snpNotHP, invCovDFC)
+
+  results = list(resultsHP=resultsHP, resultsNotHP=resultsNotHP)
+
   return(results)
 
 }
