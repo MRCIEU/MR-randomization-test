@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l walltime=120:00:00,nodes=1:ppn=10
 #PBS -o out-1-1.file
-#PBS -t 1-24
+#PBS -t 1-6
 #---------------------------------------------
 
 date
@@ -31,7 +31,7 @@ ivEffect=0.05
 
 
 
-Rscript sim-hp.R $ncHP $ncnotHP $rsqC $numhpSnps $numnonhpSnps $ivEffect "dosage" $covarsInc
+Rscript sim-hp.R $ncHP $ncnotHP $rsqC $numhpSnps $numnonhpSnps $ivEffect "dosage" $covarsInc 0.001
 
 date
 

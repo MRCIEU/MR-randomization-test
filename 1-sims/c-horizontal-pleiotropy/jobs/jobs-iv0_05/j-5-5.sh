@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l walltime=120:00:00,nodes=1:ppn=10
-#PBS -o out-1-5.file
+#PBS -o out-5-5.file
 #PBS -t 1-6
 #---------------------------------------------
 
@@ -25,7 +25,7 @@ module add languages/R-4.0.3-gcc9.1.0
 export RES_DIR="${HOME}/2021-randomization-test/results"
 
 
-ncHP=1
+ncHP=5
 ncnotHP=5
 ivEffect=0.05
 
