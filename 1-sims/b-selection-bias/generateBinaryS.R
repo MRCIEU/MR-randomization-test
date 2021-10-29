@@ -6,9 +6,6 @@
 # use MASS for mvrnorm
 library('MASS')
 
-# rsq package for calculating rsq for binary outcome
-library('rsq')
-
 generateBinaryS <- function(dfC, x, ncs, rsqSelection) {
 
   # number of covariates
