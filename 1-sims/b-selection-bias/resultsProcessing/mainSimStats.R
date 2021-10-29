@@ -12,24 +12,9 @@ params <- expand.grid(
 	ivEffect=c(0.05, 0.1),
 	iv=c('grs'),
 	covarsIncluded=c('all', 'half'),
-	allParticipants=c(NA)
+	allParticipants=c(0)
 )
 
-
-# add ncs=2, ncnots=0 versions
-params2 <- expand.grid(
-
-        rCovars=c(-1,0,0.2,0.4,0.8),
-        rSelection=c(0.05, 0.1, 0.2),
-        ncNotS=c(0),
-        ncs=c(2),
-        ivEffect=c(0.05, 0.1),
-        iv=c('grs'),
-        covarsIncluded=c('all'),
-	allParticipants=c(NA)
-)
-
-params = rbind(params, params2)
 
 
 ##
@@ -39,18 +24,25 @@ source('simStats.R')
 source('loadResultsData.R')
 
 resDir=Sys.getenv('RES_DIR')
-resFile = paste0(resDir, '/sims/sim-res.csv')
+resFile = paste0(resDir, '/sims/selection/sim-res.csv')
 
 # write output file header line
-cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon, powerInd, mcseInd, powerIndLi, mcseIndLi"), file=resFile, sep="\n", append=FALSE)
+cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon, powerInd, mcseInd, powerIndLi, mcseIndLi, powerRsq, mcseRsq"), file=resFile, sep="\n", append=FALSE)
 
 # generate summary stat for each param combination and save results to file
 for (i in 1:nrow(params)) {
 
 	simRes = loadResultsData(params[i,])
-	res = simStats(simRes)
 
-	# write result to file
-	resLine = cbind(params[i,], data.frame(res))	
-	cat(paste(resLine, collapse=','), file=resFile, append=TRUE, sep='\n' )
+	if (!is.null(simRes)) {
+		res = simStats(simRes)
+
+		# write result to file
+		resLine = cbind(params[i,], data.frame(res))	
+		cat(paste(resLine, collapse=','), file=resFile, append=TRUE, sep='\n' )
+	}
 }
+
+
+warnings()
+

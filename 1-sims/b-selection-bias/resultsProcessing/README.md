@@ -12,7 +12,7 @@ Rscript mainSimStats.R
 Plot results:
 
 ```bash
-matlab -r "resFileName='sim-res-all';plotRes"
+matlab -r "resFileName='sim-res';plotRes"
 ```
 
 ## Results in whole sample

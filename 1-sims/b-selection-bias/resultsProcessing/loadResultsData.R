@@ -30,12 +30,7 @@ loadResultsData <- function(params) {
 
   seed=1
 
-  if (is.na(allParticipants)) {
-    filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "_", seed, ".txt")
-  }
-  else {
-    filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
-  }
+  filename=paste0(resDir, "/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
   print(filename)
 
 
@@ -53,12 +48,7 @@ loadResultsData <- function(params) {
 
   for (seed in 2:10) {
 
-    if (is.na(allParticipants)) {
-      filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "_", seed, ".txt")
-    }
-    else {
-      filename=paste0(resDir, "/sims/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
-    }
+    filename=paste0(resDir, "/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
 
     if (file.exists(filename)) {
 

@@ -16,7 +16,7 @@ markersizex = 11;
 %%%%
 %%%% 10 covariates affect selection
 
-allx = dataset('file', strcat(resDir, '/sims/', resFileName, '.csv'), 'delimiter', ',');
+allx = dataset('file', strcat(resDir, '/sims/selection/', resFileName, '.csv'), 'delimiter', ',');
 
 % convert to numeric (needed because when not all sim results are there then NaN'a mean the columns are strings)
 %allx.powerBranson = str2double(allx.powerBranson);
@@ -44,6 +44,7 @@ for e=1:length(all_ivEffect)
 for c=1:length(all_covarsIncluded)
 
 h=figure('DefaultAxesFontSize',14);
+plot([1 4], [0.05 0.05]); hold on;
 
 % plot results for each ncnots and corr combination
 for i=1:length(all_ncNOTs)
@@ -56,11 +57,10 @@ for i=1:length(all_ncNOTs)
 		ivEffect=all_ivEffect(e);
 		covarsIncluded=all_covarsIncluded(c);
 
-		posx=i+(j-1)*0.1;
+		posx=i+(j-1)*0.17;
 
 		ix = find(allx.ncs==ncs & allx.ncNotS == ncNOTs & allx.rCovars ==rCovars & allx.rSelection == rSel & allx.ivEffect == ivEffect & allx.covarsIncluded == covarsIncluded);
 
-		length(ix)
 		if (length(ix)>0)
 
 		% branson
@@ -72,7 +72,7 @@ for i=1:length(all_ncNOTs)
 		hxBran(j) = h1;
 
 		% bonferroni
-		posx = posx+0.02;
+		posx = posx+0.03;
 		lower=allx.powerBon(ix) - 1.96*allx.mcseBon(ix);
                 upper=allx.powerBon(ix) + 1.96*allx.mcseBon(ix);
 		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{2}, 'linewidth', 3);
@@ -81,7 +81,7 @@ for i=1:length(all_ncNOTs)
 		hxBon(j) = h1;
 
 		% number of independent tests based on correlation
-		posx = posx+0.02;
+		posx = posx+0.03;
 		lower=allx.powerInd(ix) - 1.96*allx.mcseInd(ix);
 		upper=allx.powerInd(ix) + 1.96*allx.mcseInd(ix);
 		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{3}, 'linewidth', 3);
@@ -90,7 +90,7 @@ for i=1:length(all_ncNOTs)
 		hxInd(j) = h1;
 
 		% number of independent tests based on correlation
-                posx = posx+0.02;
+                posx = posx+0.03;
                 lower=allx.powerIndLi(ix) - 1.96*allx.mcseIndLi(ix);
                 upper=allx.powerIndLi(ix) + 1.96*allx.mcseIndLi(ix);
                 hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{4}, 'linewidth', 3);
@@ -100,7 +100,7 @@ for i=1:length(all_ncNOTs)
 
 
 		% number of independent tests based on correlation
-                posx = posx+0.02;
+                posx = posx+0.03;
                 lower=allx.powerRsq(ix) - 1.96*allx.mcseRsq(ix);
                 upper=allx.powerRsq(ix) + 1.96*allx.mcseRsq(ix);
                 hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{5}, 'linewidth', 3);
@@ -116,7 +116,7 @@ end
 % set xaxis values
 labelx = all_ncNOTs;
 set(gca,'XTickLabel', labelx);
-set(gca,'XTick', [1.1;2.1;3.1]);
+set(gca,'XTick', [1.5;2.5;3.5]);
 
 
 set(gcf, 'unit', 'inches');
@@ -144,7 +144,7 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-filename=strcat(resDir, '/sims/fig-sim-selection-',resFileName,num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
+filename=strcat(resDir, '/sims/selection/fig-sim-selection-',resFileName,num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
 saveas(h, filename);
 
 
