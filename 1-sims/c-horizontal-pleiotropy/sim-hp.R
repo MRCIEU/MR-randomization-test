@@ -33,6 +33,7 @@ iv=args[7]
 # half: generate the data as normal but only include half the covariates in C_HP and C_notHP in the tested covariates set
 covarsIncluded = args[8]
 
+zCorr=args[9]
 
 
 # set default settings
@@ -58,26 +59,27 @@ print(paste0("IV type (either 'dosage' or 'grs'):", iv))
 print(paste0("Covariates included in tested covariate set:", covarsIncluded))
 print(paste0("Num SNPs:", numSnps))
 print(paste0("Num HP SNPs:", numHPSnps))
+print(paste0("Effect of z on covariates:", zCorr))
 print('-------------------')
 
 
 library(parallel)
 cl <- makeCluster(10)
 clusterSetRNGStream(cl, iseed = 42)
-y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsIncluded, numSnps, numHPSnps, resDir) {
+y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsIncluded, numSnps, numHPSnps, resDir, zCorr) {
 
   ncNotHP = nc - ncHP
   numNotHPSnps = numSnps - numHPSnps
 
-  sink(paste0(resDir, "/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".log"))
+  sink(paste0(resDir, "/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, '-', zCorr, "_", seed, ".log"))
 
   source('doSimHP.R')
 
-  filename=paste0("/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, "_", seed, ".txt")
+  filename=paste0("/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, '-', zCorr, "_", seed, ".txt")
 
   for (i in 1:50) {
   
-    results = doSimHP(nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, seed=seed)
+    results = doSimHP(nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, zCorr=zCorr, seed=seed)
 
     # results: pvalueMD pvalueMDz, individualPvalues, bonfRejectAll, bonfRejectPerZ, indtRejectMainAll, indtRejectLiAll, indtRejectMainPerZ,indtRejectLiPerZ
 
@@ -93,7 +95,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsInc
 
   sink()
 
-}, nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, resDir=resDir)
+}, nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, resDir=resDir, zCorr=zCorr)
 stopCluster(cl)
 
 

@@ -5,7 +5,7 @@
 # nc: the number of covariates included as candidates
 # ncHP: the number of covariates that are affected by the HP snps
 # corrC: correlation between covariates
-generateHPSimData <- function(nc, ncHP, corrC, ivEffect, ivType="dosage", numSnps=2, numHPSnps=1, seed=seed) {
+generateHPSimData <- function(nc, ncHP, corrC, ivEffect, ivType="dosage", numSnps=2, numHPSnps=1, zCorr=zCorr, seed=seed) {
 
   ###
   ### load packages
@@ -45,10 +45,10 @@ generateHPSimData <- function(nc, ncHP, corrC, ivEffect, ivType="dosage", numSnp
 
   ## how to generate covariates with particular correlation and depending on Z *************************
   if (corrC>=0) {
-    dfC = generateHPCovarsWithCorr(n=n, nc=nc, ncHP=ncHP, corr=corrC, z=z, numHPSnps=numHPSnps)
+    dfC = generateHPCovarsWithCorr(n=n, nc=nc, ncHP=ncHP, corr=corrC, z=z, numHPSnps=numHPSnps, zCorr=zCorr)
   }
   else {
-    dfC = generateHPCovarsWithCorrDistribution(n=n, nc=nc, ncHP=ncHP, corr=corrC, seed=seed, z=z, numHPSnps=numHPSnps)
+    dfC = generateHPCovarsWithCorrDistribution(n=n, nc=nc, ncHP=ncHP, corr=corrC, seed=seed, z=z, numHPSnps=numHPSnps, zCorr=zCorr)
   }
   
 
