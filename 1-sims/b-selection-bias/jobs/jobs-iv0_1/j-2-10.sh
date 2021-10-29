@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=10:00:00,nodes=1:ppn=10
+#PBS -l walltime=30:00:00,nodes=1:ppn=10
 #PBS -o out-2-10.file
 #PBS -t 1-30
 #---------------------------------------------
@@ -30,7 +30,7 @@ ncnots=10
 
 
 # ncs ncnots rc rSelection
-Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS 0.1 "grs" $covarsInc
+Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS 0.1 "grs" $covarsInc 0
 
 date
 

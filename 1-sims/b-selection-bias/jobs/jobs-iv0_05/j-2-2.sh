@@ -29,8 +29,8 @@ ncnots=2
 ivEffect=0.05
 
 
-# ncs ncnots rc rSelection
-Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS $ivEffect "grs" $covarsInc
+# ncs ncnots rc rSelection iveffect grsVSsnp covarsIncluded allSample
+Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS $ivEffect "grs" $covarsInc 0
 
 date
 

@@ -30,7 +30,7 @@ ncnots=50
 
 
 # ncs ncnots rc rSelection
-Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS 0.1 "grs" $covarsInc
+Rscript sim-selection.R $ncs $ncnots $rsqC $rsqS 0.1 "grs" $covarsInc 0
 
 date
 
