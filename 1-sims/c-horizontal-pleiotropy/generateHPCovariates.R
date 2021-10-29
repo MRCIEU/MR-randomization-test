@@ -102,7 +102,7 @@ generateHPCovarsWithCorrDistribution <- function(n, nc, ncHP, corr, seed, z, zCo
   }
 
   # remove z from covariate data frame
-  vars = vars[,-1]
+  vars = vars[,-(1:numHPSnps)]
 
   print(cor(vars))
 
