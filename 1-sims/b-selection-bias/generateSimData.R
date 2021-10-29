@@ -5,7 +5,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage", all=FALSE, covarsIncluded=covarsIncluded, seed, resDir) {
+generateSimData <- function(nc, ncs, corrC, totalEffectSelection, ivEffect, ivType="dosage", all=FALSE, covarsIncluded=covarsIncluded, seed, resDir) {
 
   ###
   ### load packages
@@ -28,8 +28,12 @@ generateSimData <- function(n, nc, ncs, corrC, totalEffectSelection, ivEffect, i
   ### is the p value correct when there are dependencies between the covariates
 
   # number in sample
-  n = 920000
-
+  if (all == TRUE) {
+    # reduce overall sample to selected size so it's manageable
+    n = 50600
+  } else {
+    n = 920000
+  }
   
   print('-------------------')
   print(paste0("Number of covariates that affect selection: ", ncs, " of ", nc))

@@ -38,15 +38,13 @@ out <- tryCatch(
   ## x is a binary exposure
   ## y is a continuous outcome
 
-  # number in sample
-  n = 350000
   source('generateSimData.R')
-  simdata = generateSimData(n=n, nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv, all=all, covarsIncluded=covarsIncluded, seed=seed)
+  simdata = generateSimData(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffectSelection, ivEffect=ivEffect, ivType=iv, all=all, covarsIncluded=covarsIncluded, seed=seed)
 
   if (all==TRUE) {
     print('all test interaction start')
     ncNOTs = nc - ncs
-    filename=paste0("/sims/sim-out-poisson-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffectSelection, "-iv", iv, ivEffect, '-', covarsIncluded, '-', all, "_", seed, ".txt")
+    filename=paste0("/sims/selection/sim-out-poisson-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffectSelection, "-iv", iv, ivEffect, '-', covarsIncluded, '-', all, "_", seed, ".txt")
     print('a')
     testPoisson(simdata$s, simdata$x, simdata$dfC[,1:ncs, drop=FALSE], resDir, filename)
     print('b')
