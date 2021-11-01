@@ -33,7 +33,7 @@ iv=args[7]
 # half: generate the data as normal but only include half the covariates in C_HP and C_notHP in the tested covariates set
 covarsIncluded = args[8]
 
-zCorr=args[9]
+zCorr=as.numeric(args[9])
 
 
 # set default settings
