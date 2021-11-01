@@ -2,12 +2,12 @@
 # generate covariates C with particular correlation corrC
 generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnps) {
 
-  
+
   library('faux')
 
 
   # init vars to contain the snps that are horizontally pleiotropic
-  vars = data.frame(z[,1:numHPSnps])
+  vars = data.frame(z[,1:numHPSnps, drop=FALSE])
   #print(head(vars))
 
   # generate covariate one at a time
@@ -25,8 +25,9 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
 
     # generate next covariate with particular correlation with vars 
     # i.e. the HP snps and the already generated covariates
-    covar = rnorm_pre(vars, r=c(rep(thisZCorr,numHPSnps),rep(corr, (i-1))), empirical=FALSE)
-
+    rx = c(rep(thisZCorr,numHPSnps),rep(corr, (i-1)))
+    covar = rnorm_pre(vars, r=rx, empirical=FALSE)
+    
     # add new covar to covars
     vars = cbind(vars,covar)
     colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
@@ -58,7 +59,7 @@ generateHPCovarsWithCorrDistribution <- function(n, nc, ncHP, corr, seed, z, zCo
 
   # init vars to contain the snps that are horizontally pleiotropic
   vars = data.frame(z)
-  vars = vars[,1:numHPSnps]
+  vars = vars[,1:numHPSnps, drop=FALSE]
   
   impossibleCorrs=TRUE
   while(impossibleCorrs==TRUE) {
