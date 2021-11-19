@@ -49,7 +49,6 @@ generateCovariatesWithCorrelationDistribution <- function(n, nc, corr, seed) {
         print('Making cov matrix positive definite')
         covC = make.positive.definite(covC)
         print('done')
-        print(covC)
     }
 
     # generate covariates with this covariance
