@@ -5,13 +5,15 @@
 
 params <- expand.grid(
 
-	rCovars=c(-1,0,0.2,0.4),
+	rCovars=c(-1,0,0.2,0.4,0.6,0.8),
 	ncNotHP=c(1,5),
 	ncHP=c(1,5),
-	numSNPsHP = c(1,10),
-	numSNPsNOTHP = c(1,10,50),
+	numSNPsHP = c(1),
+	numSNPsNOTHP = c(1),
+	hpEffect=c(0.001, 0.005, 0.01),
 	ivEffect=c(0.05)
 )
+
 
 
 

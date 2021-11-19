@@ -3,8 +3,9 @@ resDir=getenv('RES_DIR');
 
 
 % basic graph options
-colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]'};
-facecolorx = {'white';'white';'white';'white'};
+%colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]'};
+colorx = {'[0.8 0.2 0.2]';'blue';'[0.2 0.8 0.2]';'[0.5 1 0.5]';'[0.9 0.85 0.2]'};
+facecolorx = {'white';'white';'white';'white';'white'};
 markerEdgecolorx = {'[0.8 0.2 0.2]';'[0.4 0.0 0.0]';'[0.4 0.0 0.2]'; '[1.0 0.5 0.5]'; '[0.1 0.1 0.6]'; '[0.5 0.8 0.0]'; 'magenta';'cyan'};
 markersx = {'s';'^';'o';'v';'d'};
 markersizex = 11;
@@ -13,22 +14,21 @@ markersizex = 11;
 %%%%
 %%%% 10 covariates affect selection
 
-allx = dataset('file', strcat(resDir, '/sims/hp/sim-resNO_NA.csv'), 'delimiter', ',');
+allx = dataset('file', strcat(resDir, '/sims/hp/sim-res.csv'), 'delimiter', ',');
 
 
 % sim params
 all_nchp=[1,5];
 all_ncNOThp=[1,5];
-all_numSNPsHP=[1,10];
-all_numSNPsNOTHP=[1,10];
-all_rCovars=[0,0.2,0.4,-1];
+all_rCovars=[0,0.2,0.4,0.8,-1];
+all_hpEffect=[0.001, 0.005, 0.01];
 
-for a=1:length(all_numSNPsHP)
+for a=1:length(all_hpEffect)
 
-  for b=1:length(all_numSNPsNOTHP)
+    hpEffect = all_hpEffect(a)
 
-     numSNPsHP = all_numSNPsHP(a);
-     numSNPsNOTHP = all_numSNPsNOTHP(b);
+    numSNPsHP = 1;
+    numSNPsNOTHP = 1;
 
     % one plot for each numSNPsHP, numSNPsNOTHP combination
     h=figure('DefaultAxesFontSize',14);
@@ -47,7 +47,7 @@ for a=1:length(all_numSNPsHP)
 
 		posx=2*c+(d-1)+(e-1)*0.1;
 
-		ix = find(allx.ncHP==ncHP & allx.ncNotHP == ncNotHP & allx.numSNPsHP == numSNPsHP & allx.numSNPsNOTHP == numSNPsNOTHP & allx.rCovars == rCovars & allx.ivEffect == ivEffect);
+		ix = find(allx.ncHP==ncHP & allx.ncNotHP == ncNotHP & allx.numSNPsHP == numSNPsHP & allx.numSNPsNOTHP == numSNPsNOTHP & allx.rCovars == rCovars & allx.ivEffect == ivEffect & allx.hpEffect == hpEffect);
 
 		if (length(ix) > 0) 
 
@@ -86,6 +86,16 @@ for a=1:length(all_numSNPsHP)
 
                 hxIndLi(e) = h1;
 
+		% number of independent tests based on correlation
+                posx = posx+0.03;
+                lower=allx.powerRsq(ix) - 1.96*allx.mcseRsq(ix);
+                upper=allx.powerRsq(ix) + 1.96*allx.mcseRsq(ix);
+                hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{5}, 'linewidth', 3);
+                hold on; h1=plot(posx, allx.powerRsq(ix), markersx{e}, 'MarkerFaceColor', facecolorx{5}, 'MarkerEdgeColor', colorx{5}, 'MarkerSize', markersizex);
+
+                hxRsq(e) = h1;
+
+
 		end
 
 	end
@@ -93,7 +103,6 @@ for a=1:length(all_numSNPsHP)
     end
 
 % set xaxis values
-%labelx = all_ncNOTs;
 labelx = {'1,1', '1,5', '5,1', '5,5'};
 set(gca,'XTickLabel', labelx);
 set(gca,'XTick', [2.1;3.1;4.1;5.1]);
@@ -103,7 +112,7 @@ set(gcf, 'unit', 'inches');
 figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon,hxInd,hxIndLi], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=normal';},'Location','NorthEastOutside');
+lx=legend([hxBran,hxBon,hxInd,hxIndLi,hxRsq], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=0.8';'Indep (Li) corr=normal';'Rsq corr=0';'Rsq corr=0.2';'Rsq corr=0.4';'Rsq corr=0.8';'Rsq corr=normal';},'Location','NorthEastOutside');
 
 lx.FontSize = 12;
 
@@ -124,11 +133,10 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-filename=strcat(resDir, '/sims/hp/fig-sim-hp-hpsnp',num2str(numSNPsHP),'-notHPsnp',num2str(numSNPsNOTHP),'.pdf')
+filename=strcat(resDir, '/sims/hp/fig-sim-hp-hpsnp',num2str(numSNPsHP),'-notHPsnp',num2str(numSNPsNOTHP),'-', num2str(hpEffect),'.pdf')
 saveas(h, filename);
 
 
-end
 
 end
 
