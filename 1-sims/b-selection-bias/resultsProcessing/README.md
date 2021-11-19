@@ -33,3 +33,15 @@ matlab -r "resFileName='sim-res-allparticipants';plotRes"
 
 
 
+## Poisson regression results
+
+These results are estimates of the interaction between covariates and the outcome, in their effect of selection.
+This is what drives the selection bias.
+
+```bash
+Rscript mainSummarisePoisson.R
+```
+
+```bash
+matlab -r plotPoissonResults
+```
