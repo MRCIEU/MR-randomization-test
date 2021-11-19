@@ -147,8 +147,8 @@ mydata$rs4246598 * 0.022 +
 
 
 ## CAD outcome
-caddata = read.table(paste0(dataDir, '/phenotypes/derived/phenos-hp-cad.csv'), header=1, sep=',')
-
+caddata = read.table(paste0(dataDir, '/phenotypes/derived/phenos-hp.csv'), header=1, sep=',')
+caddata = caddata[,'eid', 'cad', 'crp']
 
 ## age and sex
 agesex = read.table(paste0(dataDir, '/phenotypes/derived/phenos-selection.csv'), header=1, sep=',')
