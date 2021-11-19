@@ -28,7 +28,7 @@ generateHPSimData <- function(nc, ncHP, corrC, ivEffect, ivType="dosage", numSnp
   ### is the p value correct when there are dependencies between the covariates
 
   # number in sample
-  n = 920000
+  n = 500000
 
   
   print('-------------------')
