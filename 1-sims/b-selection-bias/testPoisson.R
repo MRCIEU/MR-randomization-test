@@ -1,6 +1,6 @@
 
 
-testPoisson <-function(s, x, dfC, resDir, filename) {
+testPoisson <-function(s, x, dfC, resDir, filename, rep) {
 
 
   ## calculate interaction between X and the covariates that affect S, including also each main effect
@@ -14,7 +14,7 @@ testPoisson <-function(s, x, dfC, resDir, filename) {
     beta = coefs[paramName, "Estimate"]
     se = coefs[paramName, "Std. Error"]
     p = coefs[paramName, "Pr(>|z|)"]
-    resStr = paste(paramName, beta, se, p, sep=',')
+    resStr = paste(rep,paramName, beta, se, p, sep=',')
 
     cat(resStr, file=paste0(resDir, filename), sep="\n", append=TRUE)
   }

@@ -11,7 +11,7 @@
 # nc: the number of covariates included as candidates
 # ncs: the number of covariates that affect selection
 # corrC: correlation between covariates
-doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded, all=FALSE, seed, resDir) {
+doSimSelection <- function(nc, ncs, corrC, totalEffectSelection, iv, ivEffect, covarsIncluded, all=FALSE, seed, resDir, rep) {
 
   source('../generic-functions/getMahalanobisDist.R')
   source('doRandomizationTest.R')
@@ -46,7 +46,7 @@ out <- tryCatch(
     ncNOTs = nc - ncs
     filename=paste0("/sims/selection/sim-out-poisson-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffectSelection, "-iv", iv, ivEffect, '-', covarsIncluded, '-', all, "_", seed, ".txt")
     print('a')
-    testPoisson(simdata$s, simdata$x, simdata$dfC[,1:ncs, drop=FALSE], resDir, filename)
+    testPoisson(simdata$s, simdata$x, simdata$dfC[,1:ncs, drop=FALSE], resDir, filename, rep)
     print('b')
   }
 

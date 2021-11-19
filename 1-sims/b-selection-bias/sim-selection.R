@@ -91,8 +91,10 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
   }
 
   for (i in 1:50) {
+
+    print(paste0('ITER: ', i))
   
-    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed, all=allSample, resDir=resDir)
+    pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed, all=allSample, resDir=resDir, rep=i)
 
     cat(paste0(i, ",",paste(unlist(pvalue), collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
   
