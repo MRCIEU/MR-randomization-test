@@ -13,8 +13,6 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
   # generate covariate one at a time
   for (i in 1:nc) {
 
-    print(i)
-
     # only the first ncHP covariates are affected by z
     if (i<=ncHP) {
       thisZCorr = zCorr
@@ -31,17 +29,10 @@ generateHPCovarsWithCorr <- function(n, nc, ncHP, corr, z, zCorr=0.001, numHPSnp
     # add new covar to covars
     vars = cbind(vars,covar)
     colnames(vars)[ncol(vars)] = paste0('c', ncol(vars)-1)
-  
-    print(dim(vars))
   }
-
-  #print(head(vars))
 
   # remove z from covariate data frame
   vars = vars[,-(1:numHPSnps)]
-
-  #print(cor(vars))
-  #print(head(vars))
 
   return(vars)
 }
