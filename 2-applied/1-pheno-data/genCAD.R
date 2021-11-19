@@ -1,13 +1,9 @@
 
 
-dataDir=Sys.getenv('PROJECT_DATA')
-resDir=Sys.getenv('RES_DIR')
-
+genCAD <- function(phenos) {
 
 
 ## get phenos
-
-phenos = read.table(paste0(dataDir, '/phenotypes/original/phenos-hp-cad.csv'), header=1, sep=',')
 
 phenos$cad = 0
 
@@ -60,12 +56,11 @@ table(phenos$cad)
 
 colnames(phenos)[which(colnames(phenos) == "x30710_0_0")] = "crp"
 
-phenos = phenos[,c('eid', 'cad', 'crp')]
+#phenos = phenos[,c('eid', 'cad', 'crp')]
 
 
-## save to file
+return(phenos)
 
-outfile = paste0(dataDir, '/phenotypes/derived/phenos-hp-cad.csv')
-write.table(phenos, outfile, sep=',', row.names=FALSE)
+}
 
 

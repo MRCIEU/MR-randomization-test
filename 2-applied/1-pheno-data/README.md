@@ -56,12 +56,27 @@ head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/da
 head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep 'x50_'
 head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep 'x48_'
 head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep 'x49_'
+head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep '20002'
+head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep '6150'
+head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep '131296'
+head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep '131307'
+head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep '30710'
+
 ```
 
 
 Extract phenotypes:
 
 ```bash
-cut -d',' -f 1,25-36,355-370,1740-1755,8333-8340,9075-9082,16273-16275,16397,16398,16403-16406,16415,16416,16425,16426,16429,16430,16435,16436 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv > ${PROJECT_DATA}/phenotypes/original/phenos-hp.csv
+cut -d',' -f 1,25-36,355-370,1740-1755,5852-5987,4516-4527,8333-8340,9075-9082,16273-16275,16397,16398,16403-16406,16415,16416,16419,16420,16425,16426,16429,16430,16435,16436,21099-21110 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv > ${PROJECT_DATA}/phenotypes/original/phenos-hp.csv
 ```
 
+
+
+## Derive phenotypes from raw data
+
+
+```bash
+Rscript prepPhenosSelection.R
+Rscript prepPhenosHP.R
+```

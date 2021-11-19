@@ -83,7 +83,8 @@ print("waist-hip ratio")
 phenos$waisthip = phenos$x48_0_0/phenos$x49_0_0
 
 
-
+source('genCAD.R')
+phenos = genCAD(phenos)
 
 
 write.table(phenos, paste0(datadir, "/phenotypes/derived/phenos-hp.csv"), col.names=TRUE, row.names=FALSE, sep=',')
