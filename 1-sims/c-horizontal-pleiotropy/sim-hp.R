@@ -64,9 +64,9 @@ print('-------------------')
 
 
 library(parallel)
-cl <- makeCluster(10)
+cl <- makeCluster(50)
 clusterSetRNGStream(cl, iseed = 42)
-y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsIncluded, numSnps, numHPSnps, resDir, zCorr) {
+y <- parLapply(cl, 1:50, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsIncluded, numSnps, numHPSnps, resDir, zCorr) {
 
   ncNotHP = nc - ncHP
   numNotHPSnps = numSnps - numHPSnps
@@ -77,7 +77,7 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncHP, corrC, iv, ivEffect, covarsInc
 
   filename=paste0("/sims/hp/sim-out-", ncHP, "-", ncNotHP, "-", corrC, "-numHP", numHPSnps, "-", numNotHPSnps, "-iv", iv, ivEffect, '-', covarsIncluded, '-', zCorr, "_", seed, ".txt")
 
-  for (i in 1:50) {
+  for (i in 1:10) {
   
     results = doSimHP(nc=nc, ncHP=ncHP, corrC=corrC, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, numSnps=numSnps, numHPSnps=numHPSnps, zCorr=zCorr, seed=seed)
 
