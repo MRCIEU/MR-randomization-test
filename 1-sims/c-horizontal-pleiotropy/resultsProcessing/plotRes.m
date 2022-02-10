@@ -69,15 +69,6 @@ for a=1:length(all_hpEffect)
 		hxBon(e) = h1;
 
 		% number of independent tests based on correlation
-		posx = posx+0.02;
-		lower=allx.powerInd(ix) - 1.96*allx.mcseInd(ix);
-		upper=allx.powerInd(ix) + 1.96*allx.mcseInd(ix);
-		hold on; h1=plot([posx,posx], [lower, upper], '-', 'color', colorx{3}, 'linewidth', 3);
-		hold on; h1=plot(posx, allx.powerInd(ix), markersx{e}, 'MarkerFaceColor', facecolorx{3}, 'MarkerEdgeColor', colorx{3}, 'MarkerSize', markersizex);
-
-		hxInd(e) = h1;
-
-		% number of independent tests based on correlation
                 posx = posx+0.02;
                 lower=allx.powerIndLi(ix) - 1.96*allx.mcseIndLi(ix);
                 upper=allx.powerIndLi(ix) + 1.96*allx.mcseIndLi(ix);
@@ -112,7 +103,7 @@ set(gcf, 'unit', 'inches');
 figure_size =  get(gcf, 'position');
 
 % set legend box
-lx=legend([hxBran,hxBon,hxInd,hxIndLi,hxRsq], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Indep (Li) corr=0';'Indep (Li) corr=0.2';'Indep (Li) corr=0.4';'Indep (Li) corr=0.8';'Indep (Li) corr=normal';'Rsq corr=0';'Rsq corr=0.2';'Rsq corr=0.4';'Rsq corr=0.8';'Rsq corr=normal';},'Location','NorthEastOutside');
+lx=legend([hxBran,hxBon,hxIndLi,hxRsq], {'Branson corr=0';'Branson corr=0.2';'Branson corr=0.4';'Branson corr=0.8';'Branson corr=normal';'Bonf corr=0';'Bonf corr=0.2';'Bonf corr=0.4';'Bonf corr=0.8';'Bonf corr=normal';'Indep corr=0';'Indep corr=0.2';'Indep corr=0.4';'Indep corr=0.8';'Indep corr=normal';'Rsq corr=0';'Rsq corr=0.2';'Rsq corr=0.4';'Rsq corr=0.8';'Rsq corr=normal';},'Location','NorthEastOutside');
 
 lx.FontSize = 12;
 
