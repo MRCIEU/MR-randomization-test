@@ -15,29 +15,24 @@ print("age")
 summary(phenos$x21022_0_0)
 colnames(phenos)[which(colnames(phenos)=="x21022_0_0")] = "age"
 
-# depression
-print("depression")
-phenos$hasDepression = 0
-phenos$hasDepression[which(!is.na(phenos$x130895_0_0))] = 1
-table(phenos$hasDepression)
-phenos$x130895_0_0 = NULL
+# height
+print("height")
+summary(phenos$x50_0_0)
+colnames(phenos)[which(colnames(phenos)=="x50_0_0")] = "height"
 
-# neuroticism score
-print('Neuroticism score')
-summary(phenos$x20127_0_0)
-colnames(phenos)[which(colnames(phenos)=="x20127_0_0")] = "neurot_score"
+# home locations
+print('home easting')
+summary(phenos$x20074_0_0)
+colnames(phenos)[which(colnames(phenos)=="x20074_0_0")] = "easting"
+
+print('home northing')
+summary(phenos$x20075_0_0)
+colnames(phenos)[which(colnames(phenos)=="x20075_0_0")] = "northing"
 
 # townsend
 print("townsend")
 colnames(phenos)[which(colnames(phenos)=="x189_0_0")] = "townsend"
 summary(phenos$townsend)
-
-# smoking
-print("smoking")
-colnames(phenos)[which(colnames(phenos)=="x20116_0_0")] = "smoke"
-table(phenos$smoke)
-phenos$smoke[which(phenos$smoke == -3)] = NA
-table(phenos$smoke)
 
 # education
 print("edu years")

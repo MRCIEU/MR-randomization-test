@@ -34,7 +34,7 @@ z = alldata[,"crp_grs"]
 if (covarSet == "agesex") {
   covars = alldata[,c("age", "male")]
 } else if (covarSet == "all") {
-  covars = alldata[,c("age", "male","smoke","neurot_score","hasDepression","eduyears", "townsend")]
+  covars = alldata[,c("age", "male", "height", "northing", "easting", "eduyears", "townsend")]
 } else {
   stop(paste0("covarSet arg not valid: ", covarSet))
 }

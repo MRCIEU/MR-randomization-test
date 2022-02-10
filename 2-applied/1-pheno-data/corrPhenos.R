@@ -8,7 +8,7 @@ resdir=Sys.getenv('RES_DIR')
 phenos = read.table(paste0(datadir, "/phenotypes/derived/phenos-selection.csv"), sep=",", header=1)
 
 
-phenos = phenos[,c('male', 'age', 'townsend', 'eduyears', 'smoke', 'neurot_score', 'hasDepression')]
+phenos = phenos[,c('male', 'age', 'height', 'northing', 'easting', 'eduyears', 'townsend')]
 
 phenoCor = cor(phenos, use="pairwise.complete.obs")
 
