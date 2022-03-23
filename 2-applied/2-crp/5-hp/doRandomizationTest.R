@@ -32,7 +32,7 @@ y <- parLapply(cl, snps, function(snp, alldata, resDir) {
 	
 	sink(paste0(resDir, '/crp-hp',snp,'.log'))
 
-	covars = alldata[,c("smok_pack_years", "bmi", "weight", "height", "leuk_count", "albumin", "apolip_a", "apolip_b", "chol", "glucose", "chol_hdl", "lipo_a", "sbp", "dbp", "waisthip")]
+	covars = alldata[,c("smok_pack_years", "bmi", "weight","leuk_count", "albumin", "apolip_a", "apolip_b", "chol", "glucose", "chol_hdl", "lipo_a", "sbp", "dbp", "waisthip")]
 	invCovDFC = solve(as.matrix(stats::cov(covars, use="pairwise.complete.obs")))
 
 	filename=paste0("/crp-hp-results-",snp,".txt")

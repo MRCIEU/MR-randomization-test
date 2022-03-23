@@ -11,7 +11,7 @@ resDir=Sys.getenv('RES_DIR')
 
 covars = read.table(paste0(dataDir, '/phenotypes/derived/phenos-hp.csv'), header=1, sep=',')
 
-corx = cor(covars[,c("smok_pack_years", "bmi", "weight", "height", "leuk_count", "albumin", "apolip_a", "apolip_b", "chol", "glucose", "chol_hdl", "lipo_a", "sbp", "dbp", "waisthip")], use="pairwise.complete.obs")
+corx = cor(covars[,c("smok_pack_years", "bmi", "weight", "leuk_count", "albumin", "apolip_a", "apolip_b", "chol", "glucose", "chol_hdl", "lipo_a", "sbp", "dbp", "waisthip")], use="pairwise.complete.obs")
 corx = as.data.frame(corx)
 
 
