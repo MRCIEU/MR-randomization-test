@@ -2,7 +2,8 @@
 
 ## Extract phenotypes
 
-For selection bias applied example:
+For selection bias applied example the phenotypes we extract are:
+age, sex, townsend index, age completed education, qualifications, BMI, height, home location (east coord and north coord).
 
 ```bash
 head -n 1 ${UKB_DATA_PHENO}/phenotypic/applications/16729/released/2021-09-14/data/data.48196.phesant.csv | sed 's/,/\n/g' | cat -n | grep 'eid'
@@ -29,8 +30,7 @@ cut -d',' -f 1,11,33,414,718-720,4284-4289,7230,7233,9075-9078,9093 ${UKB_DATA_P
 
 
 
-For horizontal pleiotropy applied example:
-
+For horizontal pleiotropy applied example the phenotypes we extract are:
 BMI, SBP, DBP, total cholesterol, hdl cholesterol, apolipoprotein A1, apolipoprotein B, albumin, lipoprotein A, Leukocyte count, glucose, smoking pack years, weight, height and waist hip ratio.
 
 

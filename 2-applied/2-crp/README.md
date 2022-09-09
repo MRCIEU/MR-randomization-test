@@ -1,8 +1,15 @@
 
+## CRP applied analyses
 
-# CRP genetic IVs
+We undertake the following steps:
 
-These come from [Ligthart 2018](https://www.sciencedirect.com/science/article/pii/S0002929718303203).
+1) Extract SNPs from UK Biobank genetic data
 
-There are 58 SNPs.
+2) Make GRS (used in selection bias analysis)
 
+3) Run selection bias applied example
+
+4) Run horizontal pleiotropy applied example
+
+
+See each of the directories for code and documentation.

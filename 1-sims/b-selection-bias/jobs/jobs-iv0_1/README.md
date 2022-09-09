@@ -2,7 +2,9 @@
 
 # Run jobs
 
-For IV effect on X of rsq=0.1.
+This directory contains job files, to run simulations for the scenarios with an IV effect on X of rsq=0.1.
+
+We run these jobs on Blue Crystal phase 3 (https://www.acrc.bris.ac.uk/acrc/phase3.htm).
 
 ```bash
 qsub j-2-2.sh
