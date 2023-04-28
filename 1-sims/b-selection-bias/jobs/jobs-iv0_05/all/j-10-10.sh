@@ -1,24 +1,32 @@
 #!/bin/bash
-#PBS -l walltime=120:00:00,nodes=1:ppn=10
-#PBS -o out-10-10.file
-#PBS -t 1-30
+
+#SBATCH --job-name=j10-10
+#SBATCH --partition=cpu
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=10
+#SBATCH --cpus-per-task=1
+#SBATCH --time=5-0:0:0
+#SBATCH --mem=100G
+#SBATCH --array=1-30
+#SBATCH --account=ACC1234
+
 #---------------------------------------------
 
 date
 
 
-cd $PBS_O_WORKDIR
+cd $SLURM_SUBMIT_DIR
 
 cd ../../../
 
 # get settings
-settingLine=${PBS_ARRAYID}
+settingLine=${SLURM_ARRAY_TASK_ID}
 
 rsqC=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f1`
 rsqS=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f2`
 covarsInc=`cat jobs/settings.txt | sed -n ${settingLine}p | cut -d, -f3`
 
-module add languages/R-4.0.3-gcc9.1.0
+module add languages/r/4.2.1
 
 
 export RES_DIR="${HOME}/2021-randomization-test/results"
