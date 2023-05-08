@@ -37,6 +37,11 @@ loadSelectionPoissonResults <- function(params) {
   if (file.exists(filename)) {
 
     simRes = read.table(filename, sep=',', header=0)
+    library('tidyverse')
+    xx = duplicated(simRes[,c('V1', 'V2')], fromLast=T)
+    simRes = simRes[which(xx == FALSE), ]
+    print(dim(simRes))
+    print(head(simRes))
 
   }
   else {
@@ -52,6 +57,11 @@ loadSelectionPoissonResults <- function(params) {
     if (file.exists(filename)) {
 
       simResPart = read.table(filename, sep=',', header=0)
+      library('tidyverse')
+      xx = duplicated(simResPart[,c('V1', 'V2')], fromLast=T)
+      simResPart = simResPart[which(xx == FALSE),]
+      print(dim(simResPart))
+      print(head(simResPart))
 
       simRes = rbind(simRes, simResPart)
     }

@@ -24,7 +24,7 @@ source('simStats.R')
 source('loadResultsData.R')
 
 resDir=Sys.getenv('RES_DIR')
-resFile = paste0(resDir, '/sims/selection/sim-res.csv')
+resFile = paste0(resDir, '/sims/selection/sim-resFIX.csv')
 
 # write output file header line
 cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon, powerInd, mcseInd, powerIndLi, mcseIndLi, powerRsq, mcseRsq"), file=resFile, sep="\n", append=FALSE)

@@ -30,7 +30,7 @@ loadResultsData <- function(params) {
 
   seed=1
 
-  filename=paste0(resDir, "/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
+  filename=paste0(resDir, "/sims/selection/sim-outFIX-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
   print(filename)
 
 
@@ -38,6 +38,8 @@ loadResultsData <- function(params) {
   if (file.exists(filename)) {
 
     simRes = read.table(filename, sep=',', header=1)
+
+    print(nrow(simRes))
 
   }
   else {
@@ -48,21 +50,48 @@ loadResultsData <- function(params) {
 
   for (seed in 2:10) {
 
-    filename=paste0(resDir, "/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
+    filename=paste0(resDir, "/sims/selection/sim-outFIX-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, "-", covarsIncluded, "-", allParticipants, "_", seed, ".txt")
+    print(filename)
 
     if (file.exists(filename)) {
 
       simResPart = read.table(filename, sep=',', header=1)
 
+      print(nrow(simResPart))
+
       simRes = rbind(simRes, simResPart)
     }
 }
 
-  numRes = nrow(simRes)
-  print(paste0('number of simulation results: ', numRes))
+#  numRes = nrow(simRes)
+#  print(paste0('number of simulation results: ', numRes))
 #  if (numRes!=500) {
 #    stop(paste0('number of results not 500: ', numRes))
 #  }
+
+
+
+
+ix = which(colnames(simRes) == "pvalue")
+if (length(ix) == 0) {
+
+  ix = which(colnames(simRes) == "p")
+  colnames(simRes)[ix] = "pvalue"
+
+  ix = which(colnames(simRes) == "bonf_reject")
+  colnames(simRes)[ix] = "pvalue"
+
+  ix = which(colnames(simRes) == "pRsq")
+  colnames(simRes)[ix] = "pvalueRsq"
+
+  simRes$lowestP = apply(simRes[,paste0('p', 1:nc)], 1, min)
+  simRes$indtMainP = simRes$lowestP*simRes$indepNumTestsMain  
+  simRes$indtLiP = simRes$lowestP*simRes$indepNumTestsLi
+
+
+}
+
+
 
   return(simRes)
 

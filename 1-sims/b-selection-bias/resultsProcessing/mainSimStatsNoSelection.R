@@ -26,7 +26,7 @@ source('simStats.R')
 source('loadResultsData.R')
 
 resDir=Sys.getenv('RES_DIR')
-resFile = paste0(resDir, '/sims/selection/sim-res-allparticipants.csv')
+resFile = paste0(resDir, '/sims/selection/sim-resFIX2-allparticipants.csv')
 
 # write output file header line
 cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBranson, powerBon, mcseBon, powerInd, mcseInd, powerIndLi, mcseIndLi, powerRsq, mcseRsq"), file=resFile, sep="\n", append=FALSE)
@@ -34,8 +34,10 @@ cat(paste0(paste(colnames(params), collapse=','), ",numRes, powerBranson, mcseBr
 # generate summary stat for each param combination and save results to file
 for (i in 1:nrow(params)) {
 
+	numCovs=(params$ncs[i] + params$ncNotS[i])
+
 	simRes = loadResultsData(params[i,])
-        res = simStats(simRes)
+        res = simStats(simRes, numCovs=numCovs)
 
 	# write result to file
 	resLine = cbind(params[i,], data.frame(res))	

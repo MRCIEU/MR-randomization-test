@@ -1,7 +1,11 @@
 
 
 
-simStats <- function(simRes) {
+simStats <- function(simRes, pthreshold=0.05, numCovs) {
+
+  print(head(simRes))
+
+  print(paste0('numCovs: ', numCovs))
 
   if (is.null(simRes)) {
     return(list(numRes=NA, powerBranson=NA, mcseBranson=NA, powerBon=NA, mcseBon=NA, powerInd=NA, mcseInd=NA, powerIndLi=NA, mcseIndLi=NA, powerRsq=NA, mcseRsq=NA))
@@ -12,7 +16,7 @@ simStats <- function(simRes) {
   ###
   ### calculate power and MCSE for branson test
 
-  numBransReject = length(which(simRes$p<0.05))
+  numBransReject = length(which(simRes$pvalue<pthreshold))
   powerBranson = numBransReject/numRes
 
   mcseBranson = (powerBranson*(1-powerBranson)/numRes)^0.5
@@ -22,7 +26,7 @@ simStats <- function(simRes) {
   ###
   ### calculate power and MCSE for rsq randomization test
 
-  numRsqReject = length(which(simRes$pRsq<0.05))
+  numRsqReject = length(which(simRes$pvalueRsq<pthreshold))
   powerRsq = numRsqReject/numRes
 
   mcseRsq = (powerRsq*(1-powerRsq)/numRes)^0.5
@@ -32,7 +36,8 @@ simStats <- function(simRes) {
   ###
   ### calculate power and MCSE for bonferoni correction approach
 
-  numBonfReject = length(which(simRes$bonf_reject == 1))
+  # compare with theshold
+  numBonfReject = length(which(simRes$bonfP <= pthreshold))
   powerBon = numBonfReject/numRes
 
   mcseBon = (powerBon*(1-powerBon)/numRes)^0.5
@@ -42,14 +47,15 @@ simStats <- function(simRes) {
   ### calculate power and MCSE for number of independent tests correction
 
   # calculated power/mcse
-  numIndepReject = length(which(simRes$indtRejectMain == 1))
+  numIndepReject = length(which(simRes$indtMainP< pthreshold))
   powerIndep = numIndepReject/numRes
 
   mcseIndep = (powerIndep*(1-powerIndep)/numRes)^0.5
 
 
+
   # calculated power/mcse
-  numIndepRejectLi = length(which(simRes$indtRejectLi == 1))
+  numIndepRejectLi = length(which(simRes$indtLiP < pthreshold))
   powerIndepLi = numIndepRejectLi/numRes
 
   mcseIndepLi = (powerIndepLi*(1-powerIndepLi)/numRes)^0.5

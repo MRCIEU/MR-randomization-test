@@ -25,7 +25,7 @@ params <- expand.grid(
 source('loadSelectionPoissonResults.R')
 
 resDir=Sys.getenv('RES_DIR')
-resFile = paste0(resDir, '/sims/selection/sim-res-poisson.csv')
+resFile = paste0(resDir, '/sims/selection-rSelection0.05_OK/sim-resFIX-poisson.csv')
 
 # write output file header line
 cat(paste0(paste(colnames(params), collapse=','), ",covar,n,mean,sd"), file=resFile, sep="\n", append=FALSE)
@@ -44,22 +44,22 @@ for (i in 1:nrow(params)) {
 	for (ic in 1:ncs) {
 
 		# get all the interaction terms
-		ix = which(grepl(paste0(":V",ic,'$'),x$V1))
+		ix = which(grepl(paste0(":V",ic,'$'),x$V2))
 
-	        print(paste0("Interactions for V",ic,": ", length(ix), ", ", mean(x$V2[ix]), " (", mean(x$V3[ix]), ")"))
+	        print(paste0("Interactions for V",ic,": ", length(ix), ", ", mean(x$V3[ix]), " (", mean(x$V4[ix]), ")"))
 
-		resLine = cbind(params[i,], paste0("V",ic), length(ix), mean(x$V2[ix]), mean(x$V3[ix]))
+		resLine = cbind(params[i,], paste0("V",ic), length(ix), mean(x$V3[ix]), mean(x$V4[ix]))
 		cat(paste(resLine, collapse=','), file=resFile, append=TRUE, sep='\n' )
 
 	}
 
 
 	# get all the interaction terms
-	ix = which(grepl(":",x$V1))
+	ix = which(grepl(":",x$V2))
 
-	print(paste0("All interactions and covariates: ", length(ix), ", ", mean(x$V2[ix]), " (", mean(x$V3[ix]), ")"))
+	print(paste0("All interactions and covariates: ", length(ix), ", ", mean(x$V3[ix]), " (", mean(x$V4[ix]), ")"))
 
-	resLine = cbind(params[i,], "all", length(ix), mean(x$V2[ix]), mean(x$V3[ix]))
+	resLine = cbind(params[i,], "all", length(ix), mean(x$V3[ix]), mean(x$V4[ix]))
 	cat(paste(resLine, collapse=','), file=resFile, append=TRUE, sep='\n' )
 	
 	

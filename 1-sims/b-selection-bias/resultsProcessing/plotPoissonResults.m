@@ -13,7 +13,7 @@ markersizex = 11;
 %%%%
 %%%% 10 covariates affect selection
 
-allx = dataset('file', strcat(resDir, '/sims/sim-res-poisson.csv'), 'delimiter', ',');
+allx = dataset('file', strcat(resDir, '/sims/selection/sim-resFIX-poisson.csv'), 'delimiter', ',');
 
 
 % sim params
@@ -79,7 +79,7 @@ figure_size =  get(gcf, 'position');
 xlabel('Number of covariates not affecting selection', 'FontSize', 14);
 ylabel('Beta (log risk ratio)');
 
-ylim([-0.33 0]);
+ylim([-0.4 0.1]);
 
 
 
@@ -97,7 +97,7 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-filename=strcat(resDir, '/sims/fig-sim-selection-poisson',num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
+filename=strcat(resDir, '/sims/selection/fig-sim-selection-poisson',num2str(ncs),'-rSel',num2str(rSel),'-ivEffect',num2str(ivEffect),'-covars',num2str(covarsIncluded),'.pdf')
 saveas(h, filename);
 
 

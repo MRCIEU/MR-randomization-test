@@ -6,28 +6,18 @@
 ## Main results in selected subsample
 
 ```bash
-Rscript mainSimStats.R
+sbatch j-mainSimStats.sh
 ```
 
-Plot results:
-
-```bash
-matlab -r "resFileName='sim-res';plotRes"
-```
 
 ## Results in whole sample
 
 To check that p~0.05 when the covariates aren't associated with the IV (i.e. there is no selection bias).
 
 ```bash
-Rscript mainSimStatsNoSelection.R
+sbatch j-mainSimStatsNoSelection.sh
 ```
 
-Plot results:
-
-```bash
-matlab -r "resFileName='sim-res-allparticipants';plotRes"
-```
 
 
 
