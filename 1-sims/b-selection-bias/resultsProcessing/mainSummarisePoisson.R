@@ -25,7 +25,7 @@ params <- expand.grid(
 source('loadSelectionPoissonResults.R')
 
 resDir=Sys.getenv('RES_DIR')
-resFile = paste0(resDir, '/sims/selection-rSelection0.05_OK/sim-resFIX-poisson.csv')
+resFile = paste0(resDir, '/sims/selection/sim-resFIX-poisson.csv')
 
 # write output file header line
 cat(paste0(paste(colnames(params), collapse=','), ",covar,n,mean,sd"), file=resFile, sep="\n", append=FALSE)
