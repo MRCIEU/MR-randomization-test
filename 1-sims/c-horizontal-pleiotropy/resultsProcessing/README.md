@@ -22,3 +22,9 @@ matlab -r plotRes
 ```bash
 matlab -r plotResNotHP
 ```
+
+## Sensitivity with 0.1 P value theshold
+
+```bash
+sbatch j-mainSimStatsThresh0_1.sh
+```

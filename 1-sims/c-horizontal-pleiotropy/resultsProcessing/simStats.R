@@ -1,7 +1,7 @@
 
 
 
-simStats <- function(params) {
+simStats <- function(params, pthreshold=0.05) {
 
   ncHP = params$ncHP
   ncNOTHP = params$ncNotHP
@@ -64,7 +64,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for branson test
 
-  numBransReject = length(which(simRes$resultsHP.pvalue<0.05))
+  numBransReject = length(which(simRes$resultsHP.pvalue<pthreshold))
   powerBranson = numBransReject/numRes
 
   mcseBranson = (powerBranson*(1-powerBranson)/numRes)^0.5
@@ -73,7 +73,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for rsq randomization test
 
-  numRsqReject = length(which(simRes$resultsHP.pvalueRsq<0.05))
+  numRsqReject = length(which(simRes$resultsHP.pvalueRsq<pthreshold))
   powerRsq = numRsqReject/numRes
 
   mcseRsq = (powerRsq*(1-powerRsq)/numRes)^0.5
@@ -83,7 +83,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for bonferoni correction approach
 
-  numBonfReject = length(which(simRes$resultsHP.bonfReject == 1))
+  numBonfReject = length(which(simRes$resultsHP.bonfP <= pthreshold))
   powerBon = numBonfReject/numRes
 
   mcseBon = (powerBon*(1-powerBon)/numRes)^0.5
@@ -93,14 +93,14 @@ simStats <- function(params) {
   ### calculate power and MCSE for number of independent tests correction
 
   # calculated power/mcse
-  numIndepReject = length(which(simRes$resultsHP.indtRejectMain == 1))
+  numIndepReject = length(which(simRes$resultsHP.indtMainP< pthreshold))
   powerIndep = numIndepReject/numRes
 
   mcseIndep = (powerIndep*(1-powerIndep)/numRes)^0.5
 
 
   # calculated power/mcse
-  numIndepRejectLi = length(which(simRes$resultsHP.indtRejectLi == 1))
+  numIndepRejectLi = length(which(simRes$resultsHP.indtLiP < pthreshold))
   powerIndepLi = numIndepRejectLi/numRes
 
   mcseIndepLi = (powerIndepLi*(1-powerIndepLi)/numRes)^0.5
@@ -111,7 +111,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for branson test
 
-  numBransRejectX = length(which(simRes$resultsNotHP.pvalue<0.05))
+  numBransRejectX = length(which(simRes$resultsNotHP.pvalue<pthreshold))
   powerBransonX = numBransRejectX/numRes
 
   mcseBransonX = (powerBransonX*(1-powerBransonX)/numRes)^0.5
@@ -120,7 +120,7 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for rsq randomization test
 
-  numRsqRejectX = length(which(simRes$resultsNotHP.pvalueRsq<0.05))
+  numRsqRejectX = length(which(simRes$resultsNotHP.pvalueRsq<pthreshold))
   powerRsqX = numRsqRejectX/numRes
 
   mcseRsqX = (powerRsqX*(1-powerRsqX)/numRes)^0.5
@@ -130,7 +130,8 @@ simStats <- function(params) {
   ###
   ### calculate power and MCSE for bonferoni correction approach
 
-  numBonfRejectX = length(which(simRes$resultsNotHP.bonfReject == 1))
+#  numBonfRejectX = length(which(simRes$resultsNotHP.bonfReject == 1))
+  numBonfRejectX = length(which(simRes$resultsNotHP.bonfP <= pthreshold))
   powerBonX = numBonfRejectX/numRes
 
   mcseBonX = (powerBonX*(1-powerBonX)/numRes)^0.5
@@ -140,14 +141,16 @@ simStats <- function(params) {
   ### calculate power and MCSE for number of independent tests correction
 
   # calculated power/mcse
-  numIndepRejectX = length(which(simRes$resultsNotHP.indtRejectMain == 1))
+#  numIndepRejectX = length(which(simRes$resultsNotHP.indtRejectMain == 1))
+  numIndepRejectX = length(which(simRes$resultsNotHP.indtMainP< pthreshold))
   powerIndepX = numIndepRejectX/numRes
 
   mcseIndepX = (powerIndepX*(1-powerIndepX)/numRes)^0.5
 
 
   # calculated power/mcse
-  numIndepRejectLiX = length(which(simRes$resultsNotHP.indtRejectLi == 1))
+#  numIndepRejectLiX = length(which(simRes$resultsNotHP.indtRejectLi == 1))
+  numIndepRejectLiX = length(which(simRes$resultsNotHP.indtLiP < pthreshold))
   powerIndepLiX = numIndepRejectLiX/numRes
 
   mcseIndepLiX = (powerIndepLiX*(1-powerIndepLiX)/numRes)^0.5
@@ -176,15 +179,5 @@ indepCheck <- function(rowVec, pCols, pThresh) {
 
 }
 
-
-# find all p values less than 0.05
-numFound <- function(rowVec) {
-	return(length(which(rowVec<0.05)))
-}
-
-# find all those with a 1, indicating this test rejected the null hypothesis
-numFoundReject <- function(rowVec) {
-        return(length(which(rowVec==1)))
-}
 
 

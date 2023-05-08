@@ -1,4 +1,7 @@
 
+% resFileName is a parameter for this set of results
+resFileName
+
 resDir=getenv('RES_DIR');
 
 
@@ -14,8 +17,7 @@ markersizex = 11;
 %%%%
 %%%% 10 covariates affect selection
 
-allx = dataset('file', strcat(resDir, '/sims/hp/sim-res.csv'), 'delimiter', ',');
-
+allx = dataset('file', strcat(resDir, '/sims/hp/', resFileName, '.csv'), 'delimiter', ',');
 
 % sim params
 all_nchp=[1,5];
@@ -124,7 +126,7 @@ pos = get(h,'Position');
 set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)]);
 
 % save to file
-filename=strcat(resDir, '/sims/hp/fig-sim-hp-hpsnp',num2str(numSNPsHP),'-notHPsnp',num2str(numSNPsNOTHP),'-', num2str(hpEffect),'.pdf')
+filename=strcat(resDir, '/sims/hp/fig-',resFileName,'sim-hp-hpsnp',num2str(numSNPsHP),'-notHPsnp',num2str(numSNPsNOTHP),'-', num2str(hpEffect),'.pdf')
 saveas(h, filename);
 
 
