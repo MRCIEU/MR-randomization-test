@@ -35,14 +35,15 @@ generateBinaryS <- function(dfC, x, ncs, rsqSelection) {
 
 
   ##
-  ## binary outcome x
+  ## binary outcome S
 
   if (rsqSelection==0.05) {
     logitPart = log(2.885)*sCont - 3.316
   } else if (rsqSelection==0.1) {
-   logitPart = log(5.38)*sCont - 3.916
+    logitPart = log(5.38)*sCont - 3.925
   } else if (rsqSelection==0.2) {
-    logitPart = log(63)*sCont - 7.19  
+    logitPart = log(63)*sCont - 7.23
+
   }
 
   pS = exp(logitPart)/(1+exp(logitPart))

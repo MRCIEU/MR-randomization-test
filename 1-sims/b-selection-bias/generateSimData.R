@@ -65,7 +65,7 @@ generateSimData <- function(nc, ncs, corrC, totalEffectSelection, ivEffect, ivTy
   ###
   ### generate binary exposure x
 
-  # C AND Z ARE DETERMINANTS OF X
+  # CS AND Z ARE DETERMINANTS OF X
   dataX = generateContinuousX2(dfC, z, ncs, ivEffect)
   x = dataX$x
 
