@@ -26,4 +26,8 @@ j*.sh.e*
 *.enc
 *.cwa
 
+# compressed files
+*tar.gz
+*.zip
+
 *off*
