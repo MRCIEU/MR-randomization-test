@@ -28,12 +28,25 @@ allx = dataset('file', strcat(resDir, '/sims/selection/', resFileName, '.csv'), 
 
 
 % sim params
-all_ncs=[2,10,50];
+
+if (resFileName == "sim-resFIX-thresh0_1") 
+  all_ncs=[2];
+  all_covarsIncluded=[1];
+  all_ivEffect=[0.05];
+  all_rSelection=[0.05];
+else
+  all_ncs=[2,10,50];
+  all_covarsIncluded=[1,2];
+  all_ivEffect=[0.05,0.1];
+  all_rSelection=[0.05, 0.1, 0.2];
+end
+
 all_ncNOTs=[2,10,50];
 all_rCovars=[0,0.2,0.4,0.8,-1];
-all_rSelection=[0.05, 0.1, 0.2];
-all_ivEffect=[0.05,0.1];
-all_covarsIncluded=[1,2];
+
+
+
+
 
 for m=1:length(all_ncs)
 
