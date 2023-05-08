@@ -26,7 +26,8 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
   }
 
   ## bonf reject boolean, using bonferroni threshold
-  bonfReject = (min(individualPvalues)*ncInc)<0.05
+  bonfP = min(individualPvalues)*ncInc
+  bonfReject = bonfP<0.05
 
 
   ## Reject using equivalent number of independent tests (from correlation)
@@ -51,10 +52,12 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
   # main version
   pThreshIndMain = 0.05/indepTestNums$indepMain
   indtRejectMain = min(individualPvalues)<pThreshIndMain
+  indtMainP = min(individualPvalues) * indepTestNums$indepMain
 
   # Li version
   pThreshIndLi = 0.05/indepTestNums$indepLi
   indtRejectLi = min(individualPvalues)<pThreshIndLi
+  indtLiP = min(individualPvalues) * indepTestNums$indepLi
 
 
   ###
@@ -110,8 +113,6 @@ doRandomizationTest <- function(dfC, z, invCovDFC) {
 #  write.table(permTestStats, 'testMD.txt', sep=',',	col.names=FALSE) 
 
   
-  #return(c(pvalue, individualPvalues, bonfReject, indtRejectMain, indtRejectLi, pvalueRsq))
-  return(list(pvalue=pvalue, individualPvalues=individualPvalues, bonfReject=bonfReject, indtRejectMain=indtRejectMain, indtRejectLi=indtRejectLi, pvalueRsq=pvalueRsq))
-
+  return(list(pvalue=pvalue, individualPvalues=individualPvalues, bonfReject=bonfReject, indtRejectMain=indtRejectMain, indtRejectLi=indtRejectLi, pvalueRsq=pvalueRsq, indepNumTestsMain=indepTestNums$indepMain, indepNumTestsLi=indepTestNums$indepLi, bonfP=bonfP, indtMainP=indtMainP, indtLiP=indtLiP))
 }
 

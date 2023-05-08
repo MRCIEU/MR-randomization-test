@@ -69,26 +69,18 @@ clusterSetRNGStream(cl, iseed = 42)
 y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv, ivEffect, covarsIncluded, resDir, allSample) {
 
   # reset file storing poisson parameters
-  filename=paste0("/sims/selection/sim-out-poisson-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
+  filename=paste0("/sims/selection/sim-out-poissonFIX-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
   cat("", file=paste0(resDir, filename), sep="\n", append=FALSE)
 
 
   # start logging
-  sink(paste0(resDir, "/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "-", allSample, "_", seed, ".log"))
+  sink(paste0(resDir, "/sims/selection/sim-outFIX-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, "-", allSample, "_", seed, ".log"))
 
   source('doSimSelection.R')
 
   # results file
-  filename=paste0("/sims/selection/sim-out-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
+  filename=paste0("/sims/selection/sim-outFIX-", ncs, "-", ncNOTs, "-", corrC, "-", totalEffect, "-iv", iv, ivEffect, '-', covarsIncluded, '-', allSample, "_", seed, ".txt")
 
-  # add header to results file
-  if (covarsIncluded == "all") {
-    cat(paste0("i,p,", paste(paste0('p', 1:nc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi,pRsq'), file=paste0(resDir, filename), sep="\n", append=FALSE)
-  }
-  else {
-    ncInc = floor(ncs/2) + floor(ncNOTs/2)
-    cat(paste0("i,p,", paste(paste0('p', 1:ncInc), collapse=','), ',bonf_reject,indtRejectMain,indtRejectLi,pRsq'), file=paste0(resDir, filename), sep="\n", append=FALSE)
-  }
 
   for (i in 1:50) {
 
@@ -96,9 +88,17 @@ y <- parLapply(cl, 1:10, function(seed, nc, ncs, corrC, ncNOTs, totalEffect, iv,
   
     pvalue = doSimSelection(nc=nc, ncs=ncs, corrC=corrC, totalEffectSelection=totalEffect, iv=iv, ivEffect=ivEffect, covarsIncluded=covarsIncluded, seed=seed, all=allSample, resDir=resDir, rep=i)
 
+    if (i==1) {
+      headernames = names(unlist(pvalue))
+      cat(paste0("i,", paste0(names(unlist(pvalue)), collapse=',')), file=paste0(resDir, filename), sep="\n", append=FALSE)
+    }
+
     cat(paste0(i, ",",paste(unlist(pvalue), collapse=',')), file=paste0(resDir, filename), sep="\n", append=TRUE)
-  
+
+    print("END ITER")  
   }
+
+  print("END 50")
 
   sink()
 
