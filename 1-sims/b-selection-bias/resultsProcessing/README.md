@@ -29,9 +29,6 @@ These results are estimates of the interaction between covariates and the outcom
 This is what drives the selection bias.
 
 ```bash
-Rscript mainSummarisePoisson.R
+sbatch j-poisson.sh
 ```
 
-```bash
-matlab -r plotPoissonResults
-```
