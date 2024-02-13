@@ -23,6 +23,14 @@ matlab -r plotRes
 matlab -r plotResNotHP
 ```
 
+Plotting results of tests on separate plots for main paper:
+```bash
+matlab -r "resFileName='sim-res';testName='bran';plotResSeparate"
+matlab -r "resFileName='sim-res';testName='bonf';plotResSeparate"
+matlab -r "resFileName='sim-res';testName='indl';plotResSeparate"
+matlab -r "resFileName='sim-res';testName='indr';plotResSeparate"
+```
+
 ## Sensitivity with 0.1 P value theshold
 
 ```bash
