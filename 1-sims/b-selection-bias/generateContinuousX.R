@@ -19,17 +19,15 @@ generateContinuousX <- function(dfC, z, ncs) {
 
   # combine the variables in CS and CNOTS INTO COMBINED VARIABLES, RESPECTIVELY.
   tmpCS = rowSums(dfC[,1:ncs, drop=FALSE]) 
-  tmpCNOTS = rowSums(dfC[,(ncs+1):nc, drop=FALSE]) 
 
   # doesn't matter that they have different variance because we account for their variance in the next step
   print(paste0('tmpCS intermed: mean=', mean(tmpCS), ', sd=', sd(tmpCS)))
-  print(paste0('tmpCNOTS intermed: mean=', mean(tmpCNOTS), ', sd=', sd(tmpCNOTS)))
 
 
   ##
   ## continuous outcome y
 
-  x = combineDeterminants(data.frame(tmpCS=tmpCS, tmpCNOTS=tmpCNOTS, z=z), varExpl=0.2)
+   x = combineDeterminants(data.frame(tmpCS=tmpCS, z=z), varExpl=0.2)
 
   return(list(x=x, tmpCS=tmpCS, tmpCNOTS=tmpCNOTS))
 
